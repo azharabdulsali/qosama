@@ -22,7 +22,7 @@ export default function Home() {
         <div className="relative z-10 -mt-[100vh] bg-[#1e1e20] pt-20 rounded-t-[3rem] shadow-[0_-50px_100px_rgba(0,0,0,0.5)]">
           
           {/* About Section */}
-          <section id="tentang" className="container mx-auto px-6 py-32 md:py-40 flex flex-col items-center text-center">
+          <section id="tentang" className="container mx-auto px-6 py-20 md:py-40 flex flex-col items-center text-center">
             <h3 className="text-sm md:text-base font-bold uppercase tracking-widest text-[#888] mb-8">
               Tentang Kami
             </h3>
@@ -43,7 +43,7 @@ export default function Home() {
                 href="https://wa.me/6285162802709?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20sepatu.%20Mohon%20informasi%20lebih%20lanjut."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="relative group overflow-hidden rounded-3xl bg-[#2a2a2c] border border-[#333] cursor-pointer"
+                className="relative group overflow-hidden rounded-3xl bg-[#2a2a2c] border border-[#333] cursor-pointer h-[500px] md:h-full"
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10"/>
                 <img src="/services/sepatu.jpg" alt="Cuci Sepatu" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
@@ -61,7 +61,8 @@ export default function Home() {
                  href="https://wa.me/6285162802709?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20helm.%20Mohon%20informasi%20lebih%20lanjut."
                  target="_blank"
                  rel="noopener noreferrer"
-                 className="relative group overflow-hidden rounded-3xl bg-[#2a2a2c] border border-[#333] cursor-pointer"
+                 rel="noopener noreferrer"
+                 className="relative group overflow-hidden rounded-3xl bg-[#2a2a2c] border border-[#333] cursor-pointer h-[500px] md:h-full"
                 >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10"/>
                 <img src="/services/helm.jpg" alt="Cuci Helm" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
@@ -80,7 +81,8 @@ export default function Home() {
                  href="https://wa.me/6285162802709?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20tas.%20Mohon%20informasi%20lebih%20lanjut."
                  target="_blank"
                  rel="noopener noreferrer"
-                 className="relative group overflow-hidden rounded-3xl bg-[#2a2a2c] border border-[#333] cursor-pointer"
+                 rel="noopener noreferrer"
+                 className="relative group overflow-hidden rounded-3xl bg-[#2a2a2c] border border-[#333] cursor-pointer h-[500px] md:h-full"
                 >
                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10"/>
                  <img src="/services/tas.jpg" alt="Cuci Tas" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
@@ -107,7 +109,7 @@ export default function Home() {
           </section>
 
           {/* Testimonials */}
-          <section className="container mx-auto px-6 py-32">
+          <section className="container mx-auto px-6 py-20 md:py-32">
              <h3 className="text-sm md:text-base font-bold uppercase tracking-widest text-[#888] mb-12 text-center">
               Kata Mereka
             </h3>
@@ -126,22 +128,22 @@ export default function Home() {
             </div>
           </section>
           
-          {/* CTA Section */}
-          <section id="booking" className="relative h-[80vh] flex items-center justify-center overflow-hidden">
-               <div className="absolute inset-0 bg-gradient-to-b from-[#1e1e20] to-black z-0" />
-               <motion.div 
-                 initial={{ scale: 0.8, opacity: 0 }}
-                 whileInView={{ scale: 1, opacity: 1 }}
-                 transition={{ duration: 1 }}
-                 className="relative z-10 text-center"
-               >
-                   <h2 className="text-4xl md:text-9xl font-bold mb-8">SIAP MELANGKAH?</h2>
-                   <p className="text-xl text-gray-400 mb-12">Jangan biarkan kotoran menghambat gayamu.</p>
-                   <a href="https://wa.me/6285162802709?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20sepatu.%20Mohon%20informasi%20lebih%20lanjut.%20Terima%20kasih." target="_blank" rel="noopener noreferrer" className="inline-block px-12 py-6 bg-white text-black text-xl font-bold rounded-full hover:bg-gray-200 transition-colors">
-                       BOOKING SEKARANG
-                   </a>
-               </motion.div>
-          </section>
+           {/* CTA Section */}
+           <section id="booking" className="relative h-[60vh] md:h-[80vh] flex items-center justify-center overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-b from-[#1e1e20] to-black z-0" />
+                <motion.div 
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  whileInView={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 1 }}
+                  className="relative z-10 text-center px-4"
+                >
+                    <h2 className="text-3xl md:text-9xl font-bold mb-8">SIAP MELANGKAH?</h2>
+                    <p className="text-base md:text-xl text-gray-400 mb-8 md:mb-12">Jangan biarkan kotoran menghambat gayamu.</p>
+                    <a href="https://wa.me/6285162802709?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20sepatu.%20Mohon%20informasi%20lebih%20lanjut.%20Terima%20kasih." target="_blank" rel="noopener noreferrer" className="inline-block px-8 py-4 md:px-12 md:py-6 bg-white text-black text-lg md:text-xl font-bold rounded-full hover:bg-gray-200 transition-colors">
+                        BOOKING SEKARANG
+                    </a>
+                </motion.div>
+           </section>
 
           {/* Footer */}
           <footer id="kontak" className="bg-black py-20 px-6 border-t border-[#333]">
