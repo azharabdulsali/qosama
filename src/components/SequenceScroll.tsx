@@ -3,6 +3,7 @@
 import { useScroll, useTransform, motion, useMotionValueEvent } from "motion/react";
 import React, { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
+import { ArrowDown, ArrowRight } from "lucide-react";
 
 const FRAME_COUNT = 192;
 
@@ -130,7 +131,7 @@ export default function SequenceScroll() {
         {/* Loading State */}
         {isLoading && (
             <div className="absolute inset-0 flex items-center justify-center bg-[#1e1e20] z-50 text-white">
-                <div className="text-2xl font-light tracking-widest animate-pulse">MEMUAT SEQUENCE...</div>
+                <div className="text-2xl font-light tracking-widest animate-pulse">Scroll untuk memulai</div>
             </div>
         )}
 
@@ -140,24 +141,33 @@ export default function SequenceScroll() {
         {/* Section 1: 0-25% */}
         <OpacitySection progress={scrollYProgress} start={0} end={0.2} fadeIn={false} className="flex items-center justify-center">
              <h1 className="text-4xl md:text-9xl font-bold tracking-tighter text-center uppercase mix-blend-difference">
-                 QOSAMA<br />
-                 <span className="text-sm md:text-3xl font-light tracking-[0.5em] block mt-4">Kemurnian Mutlak</span>
+                 QOSAMA CLEAN<br />
+                 <span className="text-sm md:text-3xl font-light tracking-[0.5em] block mt-4">Solusi Bersih Sepatu, Tas & Helm</span>
+                 <button 
+                    onClick={() => {
+                        document.getElementById("booking")?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                    className="flex flex-col items-center justify-center mt-12 group cursor-pointer text-white hover:text-cyan-400 transition-colors mx-auto"
+                 >
+                    <span className="text-base md:text-xl font-bold uppercase tracking-widest mb-2 animate-pulse">Order Sekarang</span>
+                    <ArrowDown className="animate-bounce" size={32} />
+                 </button>
              </h1>
         </OpacitySection>
 
         {/* Section 2: 25-50% */}
         <OpacitySection progress={scrollYProgress} start={0.25} end={0.45} className="flex items-center justify-start px-6 md:px-32">
-             <div className="max-w-2xl">
-                 <h2 className="text-3xl md:text-7xl font-bold mb-4">Teknologi <br/><span className="text-gray-400">Busa Mikro</span></h2>
-                 <p className="text-base md:text-lg text-gray-300">Membersihkan hingga ke serat terdalam tanpa merusak material. Efektif, aman, dan revolusioner.</p>
+             <div className="max-w-2xl drop-shadow-lg">
+                 <h2 className="text-3xl md:text-7xl font-bold mb-4 text-white [-webkit-text-stroke:1px_black] [paint-order:stroke_fill]">Teknologi <br/><span className="text-cyan-400">Busa Mikro</span></h2>
+                 <p className="text-base md:text-lg text-white font-bold [-webkit-text-stroke:1px_black] [paint-order:stroke_fill]">Membersihkan hingga ke serat terdalam tanpa merusak material. Efektif, aman, dan revolusioner.</p>
              </div>
         </OpacitySection>
         
         {/* Section 3: 50-75% */}
         <OpacitySection progress={scrollYProgress} start={0.55} end={0.75} className="flex items-center justify-end px-6 md:px-32">
-             <div className="max-w-2xl text-right">
-                 <h2 className="text-3xl md:text-7xl font-bold mb-4">Pengeringan <br/><span className="text-gray-400">Tanpa Gravitasi</span></h2>
-                 <p className="text-base md:text-lg text-gray-300">Sistem sirkulasi udara presisi menjaga bentuk sepatu Anda tetap sempurna saat proses pengeringan.</p>
+             <div className="max-w-2xl text-right drop-shadow-lg">
+                 <h2 className="text-3xl md:text-7xl font-bold mb-4 text-white [-webkit-text-stroke:1px_black] [paint-order:stroke_fill]">Pengeringan <br/><span className="text-cyan-400">Tanpa Gravitasi</span></h2>
+                 <p className="text-base md:text-lg text-white font-bold [-webkit-text-stroke:1px_black] [paint-order:stroke_fill]">Sistem sirkulasi udara presisi menjaga bentuk sepatu Anda tetap sempurna saat proses pengeringan.</p>
              </div>
         </OpacitySection>
 

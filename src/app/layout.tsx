@@ -6,8 +6,8 @@ import clsx from "clsx";
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata: Metadata = {
-  title: "QOSAMA | Premium Sneaker Care",
-  description: "Kemurnian Mutlak untuk Sepatu Anda.",
+  title: "QOSAMA | Premium Care",
+  description: "Solusi bersih sepatu, tas dan helm Anda.",
 };
 
 export default function RootLayout({

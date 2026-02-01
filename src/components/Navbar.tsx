@@ -9,7 +9,7 @@ export default function Navbar() {
   const menuItems = [
     { title: "BERANDA", href: "#home" },
     { title: "TENTANG KAMI", href: "#tentang" },
-    { title: "FITUR", href: "#fitur" },
+    { title: "LAYANAN", href: "#fitur" },
     { title: "KONTAK", href: "#kontak" },
   ];
 
