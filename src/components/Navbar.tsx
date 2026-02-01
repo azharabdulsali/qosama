@@ -53,7 +53,7 @@ export default function Navbar() {
                     <a 
                         href={item.href} 
                         onClick={() => setIsOpen(false)}
-                        className="text-4xl md:text-7xl font-bold tracking-tighter hover:text-gray-400 transition-colors block overflow-hidden group"
+                        className="text-3xl md:text-7xl font-bold tracking-tighter hover:text-gray-400 transition-colors block overflow-hidden group"
                     >
                         <span className="inline-block relative transition-transform duration-500 group-hover:-translate-y-full">
                             {item.title}
@@ -65,9 +65,9 @@ export default function Navbar() {
             </ul>
             
             <div className="absolute bottom-12 flex gap-8 text-sm text-gray-400 uppercase tracking-widest">
-                <a href="#" className="hover:text-white transition-colors">Instagram</a>
-                <a href="#" className="hover:text-white transition-colors">Whatsapp</a>
-                <a href="#" className="hover:text-white transition-colors">Email</a>
+                <a href="https://instagram.com/qosama_clean" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Instagram</a>
+                <a href="https://wa.me/6285162802709" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Whatsapp</a>
+                <a href="mailto:hello@qosama.com" className="hover:text-white transition-colors">Email</a>
             </div>
           </motion.div>
         )}

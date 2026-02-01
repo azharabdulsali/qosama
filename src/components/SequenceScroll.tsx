@@ -139,32 +139,32 @@ export default function SequenceScroll() {
         
         {/* Section 1: 0-25% */}
         <OpacitySection progress={scrollYProgress} start={0} end={0.2} fadeIn={false} className="flex items-center justify-center">
-             <h1 className="text-6xl md:text-9xl font-bold tracking-tighter text-center uppercase mix-blend-difference">
+             <h1 className="text-4xl md:text-9xl font-bold tracking-tighter text-center uppercase mix-blend-difference">
                  QOSAMA<br />
-                 <span className="text-xl md:text-3xl font-light tracking-[0.5em] block mt-4">Kemurnian Mutlak</span>
+                 <span className="text-sm md:text-3xl font-light tracking-[0.5em] block mt-4">Kemurnian Mutlak</span>
              </h1>
         </OpacitySection>
 
         {/* Section 2: 25-50% */}
-        <OpacitySection progress={scrollYProgress} start={0.25} end={0.45} className="flex items-center justify-start px-12 md:px-32">
+        <OpacitySection progress={scrollYProgress} start={0.25} end={0.45} className="flex items-center justify-start px-6 md:px-32">
              <div className="max-w-2xl">
-                 <h2 className="text-5xl md:text-7xl font-bold mb-4">Teknologi <br/><span className="text-gray-400">Busa Mikro</span></h2>
-                 <p className="text-lg text-gray-300">Membersihkan hingga ke serat terdalam tanpa merusak material. Efektif, aman, dan revolusioner.</p>
+                 <h2 className="text-3xl md:text-7xl font-bold mb-4">Teknologi <br/><span className="text-gray-400">Busa Mikro</span></h2>
+                 <p className="text-base md:text-lg text-gray-300">Membersihkan hingga ke serat terdalam tanpa merusak material. Efektif, aman, dan revolusioner.</p>
              </div>
         </OpacitySection>
         
         {/* Section 3: 50-75% */}
-        <OpacitySection progress={scrollYProgress} start={0.55} end={0.75} className="flex items-center justify-end px-12 md:px-32">
+        <OpacitySection progress={scrollYProgress} start={0.55} end={0.75} className="flex items-center justify-end px-6 md:px-32">
              <div className="max-w-2xl text-right">
-                 <h2 className="text-5xl md:text-7xl font-bold mb-4">Pengeringan <br/><span className="text-gray-400">Tanpa Gravitasi</span></h2>
-                 <p className="text-lg text-gray-300">Sistem sirkulasi udara presisi menjaga bentuk sepatu Anda tetap sempurna saat proses pengeringan.</p>
+                 <h2 className="text-3xl md:text-7xl font-bold mb-4">Pengeringan <br/><span className="text-gray-400">Tanpa Gravitasi</span></h2>
+                 <p className="text-base md:text-lg text-gray-300">Sistem sirkulasi udara presisi menjaga bentuk sepatu Anda tetap sempurna saat proses pengeringan.</p>
              </div>
         </OpacitySection>
 
         {/* Section 4: 80-100% */}
         <OpacitySection progress={scrollYProgress} start={0.85} end={1.0} className="flex items-center justify-center">
              <div className="text-center">
-                 <h2 className="text-4xl md:text-6xl font-bold mb-8">Hidupkan Kembali Langkahmu</h2>
+                 <h2 className="text-3xl md:text-6xl font-bold mb-8">Hidupkan Kembali Langkahmu</h2>
                  <button className="px-8 py-4 bg-white text-black rounded-full font-bold hover:scale-105 transition-transform duration-300">
                     MULAI SEKARANG
                  </button>
