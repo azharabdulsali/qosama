@@ -27,7 +27,7 @@ export default function Home() {
               Tentang Kami
             </h3>
             <TextReveal
-              text="Qosama bukan sekadar layanan cuci sepatu. Kami adalah laboratorium restorasi yang memadukan teknologi presisi dengan seni perawatan premium. Setiap pasang sepatu diperlakukan sebagai mahakarya yang layak mendapatkan kesempatan kedua."
+              text="Qosama adalah salah satu jasa untuk membersihkan dan merawat sepatu di Kota Semarang."
               className="text-4xl md:text-7xl font-bold max-w-5xl justify-center"
             />
           </section>
@@ -66,10 +66,10 @@ export default function Home() {
           {/* Stats Section */}
           <section className="border-y border-[#333] bg-[#1e1e20]">
               <div className="container mx-auto px-6 py-20 grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
-                  <StatItem number={15000} suffix="+" label="Sepatu Direstorasi" />
+                  <StatItem number={1000} suffix="+" label="Sepatu Direstorasi" />
                   <StatItem number={98} suffix="%" label="Pelanggan Puas" />
                   <StatItem number={24} suffix="Jam" label="Layanan Kilat" />
-                  <StatItem number={5} suffix="" label="Cabang Kota" />
+                  <StatItem number={1} suffix="" label="Cabang Kota" />
               </div>
           </section>
 
@@ -102,11 +102,11 @@ export default function Home() {
                  transition={{ duration: 1 }}
                  className="relative z-10 text-center"
                >
-                   <h2 className="text-6xl md:text-9xl font-bold mb-8">SIAP MELANGKAH?</h2>
+                   <h2 className="text-4xl md:text-9xl font-bold mb-8">SIAP MELANGKAH?</h2>
                    <p className="text-xl text-gray-400 mb-12">Jangan biarkan kotoran menghambat gayamu.</p>
-                   <button className="px-12 py-6 bg-white text-black text-xl font-bold rounded-full hover:bg-gray-200 transition-colors">
+                   <a href="https://wa.me/6285162802709" target="_blank" rel="noopener noreferrer" className="inline-block px-12 py-6 bg-white text-black text-xl font-bold rounded-full hover:bg-gray-200 transition-colors">
                        BOOKING SEKARANG
-                   </button>
+                   </a>
                </motion.div>
           </section>
 
@@ -128,16 +128,14 @@ export default function Home() {
                  <div>
                      <h4 className="font-bold mb-6 text-gray-300">SOCIAL</h4>
                      <ul className="space-y-4 text-gray-500">
-                         <li>Instagram</li>
-                         <li>Tiktok</li>
-                         <li>Youtube</li>
+                         <li><a href="https://instagram.com/qosama_clean" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Instagram</a></li>
+                         <li><a href="https://wa.me/6285162802709" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Whatsapp</a></li>
                      </ul>
                  </div>
                  <div>
                      <h4 className="font-bold mb-6 text-gray-300">LOKASI</h4>
                      <p className="text-gray-500">
-                         Jl. Senopati Raya No. 45<br/>
-                         Jakarta Selatan, 12190
+                         Jl Mataram, Jl. Kp. Rahayu Raya Jl. Mertojoyo No.118, Kota Semarang
                      </p>
                  </div>
              </div>
@@ -160,7 +158,7 @@ export default function Home() {
 function StatItem({ number, suffix, label }: { number: number, suffix: string, label: string }) {
     return (
         <div>
-            <div className="text-5xl md:text-7xl font-bold mb-2 text-white">
+            <div className="text-4xl md:text-7xl font-bold mb-2 text-white">
                 <CountUp end={number} enableScrollSpy scrollSpyOnce />{suffix}
             </div>
             <div className="text-gray-500 uppercase tracking-widest text-sm">{label}</div>
