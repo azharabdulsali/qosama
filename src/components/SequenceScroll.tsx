@@ -3,7 +3,7 @@
 import { useScroll, useTransform, motion, useMotionValueEvent } from "motion/react";
 import React, { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
-import { ArrowDown, ArrowRight } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 
 const FRAME_COUNT = 192;
 
