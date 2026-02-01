@@ -61,7 +61,6 @@ export default function Home() {
                  href="https://wa.me/6285162802709?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20helm.%20Mohon%20informasi%20lebih%20lanjut."
                  target="_blank"
                  rel="noopener noreferrer"
-                 rel="noopener noreferrer"
                  className="relative group overflow-hidden rounded-3xl bg-[#2a2a2c] border border-[#333] cursor-pointer h-[500px] md:h-full"
                 >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10"/>
@@ -80,7 +79,6 @@ export default function Home() {
               <a 
                  href="https://wa.me/6285162802709?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20tas.%20Mohon%20informasi%20lebih%20lanjut."
                  target="_blank"
-                 rel="noopener noreferrer"
                  rel="noopener noreferrer"
                  className="relative group overflow-hidden rounded-3xl bg-[#2a2a2c] border border-[#333] cursor-pointer h-[500px] md:h-full"
                 >
