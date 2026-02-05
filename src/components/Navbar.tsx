@@ -66,7 +66,7 @@ export default function Navbar() {
             
             <div className="absolute bottom-12 flex gap-8 text-sm text-gray-400 uppercase tracking-widest">
                 <a href="https://instagram.com/qosama_clean" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Instagram</a>
-                <a href="https://wa.me/6285162802709" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Whatsapp</a>
+                <a href="https://wa.me/6285162810074" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Whatsapp</a>
                 <a href="mailto:hello@qosama.com" className="hover:text-white transition-colors">Email</a>
             </div>
           </motion.div>

@@ -51,7 +51,7 @@ export default function SequenceScroll() {
   }, []);
 
   // Draw to canvas
-  const renderFrame = (index: number) => {
+  const renderFrame = React.useCallback((index: number) => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx || images.length === 0) return;
@@ -88,12 +88,13 @@ export default function SequenceScroll() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
-  };
+  }, [images]);
 
   // Resize canvas handler
   useEffect(() => {
     const handleResize = () => {
       if (canvasRef.current) {
+        // Set canvas dimensions strictly to window inner sizes
         canvasRef.current.width = window.innerWidth;
         canvasRef.current.height = window.innerHeight;
         // Re-render current frame on resize
@@ -105,7 +106,7 @@ export default function SequenceScroll() {
     handleResize(); // Initial size
 
     return () => window.removeEventListener("resize", handleResize);
-  }, [images]); // detailed dependency to ensure re-render if images load after resize
+  }, [renderFrame, currentIndex]); // Fixed dependencies
 
   // Update canvas on scroll
   useMotionValueEvent(currentIndex, "change", (latest) => {
@@ -117,7 +118,7 @@ export default function SequenceScroll() {
       if (!isLoading && images.length > 0) {
           renderFrame(1);
       }
-  }, [isLoading, images]);
+  }, [isLoading, images, renderFrame]);
 
 
   return (
@@ -145,7 +146,7 @@ export default function SequenceScroll() {
                  <span className="text-sm md:text-3xl font-light tracking-[0.5em] block mt-4">Solusi Bersih Sepatu, Tas & Helm</span>
                  <button 
                     onClick={() => {
-                        document.getElementById("booking")?.scrollIntoView({ behavior: "smooth" });
+                        document.getElementById("fitur")?.scrollIntoView({ behavior: "smooth" });
                     }}
                     className="flex flex-col items-center justify-center mt-12 group cursor-pointer text-white hover:text-cyan-400 transition-colors mx-auto"
                  >

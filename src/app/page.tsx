@@ -6,6 +6,7 @@ import TextReveal from "@/components/TextReveal";
 import { ReactLenis } from "lenis/react";
 import CountUp from "react-countup";
 import { motion } from "motion/react";
+import Image from "next/image";
 
 export default function Home() {
   return (
@@ -37,59 +38,68 @@ export default function Home() {
             <h3 className="text-sm md:text-base font-bold uppercase tracking-widest text-[#888] mb-12">
               Layanan Kami
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-auto md:h-[600px]">
+            <div className="flex flex-col md:grid md:grid-cols-3 gap-2 md:gap-6 h-[85vh] md:h-[600px]">
               {/* Service 1: Sepatu */}
               <a 
-                href="https://wa.me/6285162802709?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20sepatu.%20Mohon%20informasi%20lebih%20lanjut."
+                href="https://wa.me/6285162810074?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20sepatu.%20Mohon%20informasi%20lebih%20lanjut."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="relative group overflow-hidden rounded-3xl bg-[#2a2a2c] border border-[#333] cursor-pointer h-[500px] md:h-full"
+                className="relative group overflow-hidden rounded-3xl bg-[#2a2a2c] border border-[#333] cursor-pointer flex-1 md:h-full"
               >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10"/>
-                <img src="/services/sepatu.jpg" alt="Cuci Sepatu" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                <div className="absolute bottom-8 left-8 z-20 max-w-xl">
-                    <h4 className="text-3xl font-bold mb-4 group-hover:text-cyan-400 transition-colors">Cuci Sepatu</h4>
-                    <p className="text-gray-300 text-lg">
+                <Image src="/services/sepatu.jpg" alt="Cuci Sepatu" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                <div className="absolute bottom-4 left-6 md:bottom-8 md:left-8 z-20 max-w-xl pr-4">
+                    <h4 className="text-xl md:text-3xl font-bold mb-1 md:mb-4 group-hover:text-cyan-400 transition-colors">Cuci Sepatu</h4>
+                    <p className="text-gray-300 text-xs md:text-lg hidden md:block">
                         Perawatan Deep Cleaning menyeluruh untuk segala jenis material sepatu (Canvas, Suede, Leather). 
                         Mengembalikan kebersihan dan warna asli sepatu kesayangan Anda dengan teknik aman.
+                    </p>
+                     <p className="text-gray-300 text-xs md:hidden">
+                        Perawatan Deep Cleaning menyeluruh untuk segala jenis material sepatu.
                     </p>
                 </div>
               </a>
 
               {/* Service 2: Helm */}
               <a 
-                 href="https://wa.me/6285162802709?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20helm.%20Mohon%20informasi%20lebih%20lanjut."
+                 href="https://wa.me/6285162810074?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20helm.%20Mohon%20informasi%20lebih%20lanjut."
                  target="_blank"
                  rel="noopener noreferrer"
-                 className="relative group overflow-hidden rounded-3xl bg-[#2a2a2c] border border-[#333] cursor-pointer h-[500px] md:h-full"
+                 className="relative group overflow-hidden rounded-3xl bg-[#2a2a2c] border border-[#333] cursor-pointer flex-1 md:h-full"
                 >
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10"/>
-                <img src="/services/helm.jpg" alt="Cuci Helm" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                <Image src="/services/helm.jpg" alt="Cuci Helm" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
                 
-                <div className="absolute bottom-8 left-8 z-20 max-w-xl">
-                    <h4 className="text-2xl font-bold mb-3 group-hover:text-cyan-400 transition-colors">Cuci Helm</h4>
-                    <p className="text-gray-300 text-sm leading-relaxed">
+                <div className="absolute bottom-4 left-6 md:bottom-8 md:left-8 z-20 max-w-xl pr-4">
+                    <h4 className="text-xl md:text-2xl font-bold mb-1 md:mb-3 group-hover:text-cyan-400 transition-colors">Cuci Helm</h4>
+                    <p className="text-gray-300 text-xs md:text-sm leading-relaxed hidden md:block">
                         Sterilisasi total interior & eksterior helm. Bebas bakteri, jamur, dan bau apek. 
                         Aman untuk kulit wajah dan menjaga kualitas busa agar tetap empuk dan nyaman.
+                    </p>
+                     <p className="text-gray-300 text-xs md:hidden">
+                        Sterilisasi total interior & eksterior helm. Bebas bakteri, jamur, dan bau apek.
                     </p>
                 </div>
               </a>
 
               {/* Service 3: Tas */}
               <a 
-                 href="https://wa.me/6285162802709?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20tas.%20Mohon%20informasi%20lebih%20lanjut."
+                 href="https://wa.me/6285162810074?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20tas.%20Mohon%20informasi%20lebih%20lanjut."
                  target="_blank"
                  rel="noopener noreferrer"
-                 className="relative group overflow-hidden rounded-3xl bg-[#2a2a2c] border border-[#333] cursor-pointer h-[500px] md:h-full"
+                 className="relative group overflow-hidden rounded-3xl bg-[#2a2a2c] border border-[#333] cursor-pointer flex-1 md:h-full"
                 >
                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10"/>
-                 <img src="/services/tas.jpg" alt="Cuci Tas" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                 <Image src="/services/tas.jpg" alt="Cuci Tas" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
 
-                 <div className="absolute bottom-8 left-8 z-20 max-w-xl">
-                    <h4 className="text-2xl font-bold mb-3 group-hover:text-cyan-400 transition-colors">Cuci Tas</h4>
-                    <p className="text-gray-300 text-sm leading-relaxed">
+                 <div className="absolute bottom-4 left-6 md:bottom-8 md:left-8 z-20 max-w-xl pr-4">
+                    <h4 className="text-xl md:text-2xl font-bold mb-1 md:mb-3 group-hover:text-cyan-400 transition-colors">Cuci Tas</h4>
+                    <p className="text-gray-300 text-xs md:text-sm leading-relaxed hidden md:block">
                         Treatment spa khusus tas branded maupun harian. Membersihkan noda membandel 
                         sekaligus merawat tekstur kulit dan kain agar tetap awet dan terlihat baru.
+                    </p>
+                     <p className="text-gray-300 text-xs md:hidden">
+                        Treatment spa khusus tas branded maupun harian.
                     </p>
                 </div>
               </a>
@@ -119,7 +129,7 @@ export default function Home() {
                 >
                     {[1,2,3,4].map((i) => (
                         <div key={i} className="text-5xl md:text-8xl font-bold text-transparent stroke-text opacity-50 hover:opacity-100 transition-opacity cursor-default">
-                             "PELAYANAN BINTANG LIMA. HASIL AJAIB." — RIZKY
+                             &quot;PELAYANAN BINTANG LIMA. HASIL AJAIB.&quot; — RIZKY
                         </div>
                     ))}
                 </motion.div>
@@ -137,7 +147,7 @@ export default function Home() {
                 >
                     <h2 className="text-3xl md:text-9xl font-bold mb-8">SIAP MELANGKAH?</h2>
                     <p className="text-base md:text-xl text-gray-400 mb-8 md:mb-12">Jangan biarkan kotoran menghambat gayamu.</p>
-                    <a href="https://wa.me/6285162802709?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20sepatu.%20Mohon%20informasi%20lebih%20lanjut.%20Terima%20kasih." target="_blank" rel="noopener noreferrer" className="inline-block px-8 py-4 md:px-12 md:py-6 bg-white text-black text-lg md:text-xl font-bold rounded-full hover:bg-gray-200 transition-colors">
+                    <a href="https://wa.me/6285162810074?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20sepatu.%20Mohon%20informasi%20lebih%20lanjut.%20Terima%20kasih." target="_blank" rel="noopener noreferrer" className="inline-block px-8 py-4 md:px-12 md:py-6 bg-white text-black text-lg md:text-xl font-bold rounded-full hover:bg-gray-200 transition-colors">
                         BOOKING SEKARANG
                     </a>
                 </motion.div>
@@ -153,16 +163,16 @@ export default function Home() {
                  <div>
                      <h4 className="font-bold mb-6 text-gray-300">LAYANAN</h4>
                      <ul className="space-y-4 text-gray-500">
-                         <li><a href="https://wa.me/6285162802709?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20sepatu.%20Mohon%20informasi%20lebih%20lanjut.%20Terima%20kasih." target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Cuci Sepatu</a></li>
-                         <li><a href="https://wa.me/6285162802709?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20helm.%20Mohon%20informasi%20lebih%20lanjut.%20Terima%20kasih." target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Cuci Helm</a></li>
-                         <li><a href="https://wa.me/6285162802709?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20tas.%20Mohon%20informasi%20lebih%20lanjut.%20Terima%20kasih." target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Cuci Tas</a></li>
+                         <li><a href="https://wa.me/6285162810074?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20sepatu.%20Mohon%20informasi%20lebih%20lanjut.%20Terima%20kasih." target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Cuci Sepatu</a></li>
+                         <li><a href="https://wa.me/6285162810074?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20helm.%20Mohon%20informasi%20lebih%20lanjut.%20Terima%20kasih." target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Cuci Helm</a></li>
+                         <li><a href="https://wa.me/6285162810074?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20tas.%20Mohon%20informasi%20lebih%20lanjut.%20Terima%20kasih." target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Cuci Tas</a></li>
                      </ul>
                  </div>
                  <div>
                      <h4 className="font-bold mb-6 text-gray-300">SOCIAL</h4>
                      <ul className="space-y-4 text-gray-500">
                          <li><a href="https://instagram.com/qosama_clean" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Instagram</a></li>
-                         <li><a href="https://wa.me/6285162802709" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Whatsapp</a></li>
+                         <li><a href="https://wa.me/6285162810074" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Whatsapp</a></li>
                      </ul>
                  </div>
                  <div>
