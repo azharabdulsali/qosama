@@ -89,7 +89,7 @@ export default function Navbar() {
             href={WA_LINK}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:flex bg-secondary text-slate-900 px-6 py-2.5 rounded-full font-bold hover:shadow-lg hover:shadow-secondary/20 transition-all items-center gap-2"
+            className="hidden md:flex bg-secondary text-slate-900 px-6 py-2.5 rounded-full font-bold hover:shadow-lg hover:shadow-secondary/20 transition-all items-center gap-2"
           >
             Book Now
             <span className="material-symbols-outlined text-sm">
@@ -134,7 +134,7 @@ export default function Navbar() {
                 href={WA_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="sm:hidden bg-secondary text-slate-900 px-6 py-3 rounded-full font-bold text-center hover:shadow-lg transition-all"
+                className="md:hidden bg-secondary text-slate-900 px-6 py-3 rounded-full font-bold text-center hover:shadow-lg transition-all"
               >
                 Book Now
               </a>

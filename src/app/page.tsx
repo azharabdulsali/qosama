@@ -18,9 +18,12 @@ export default function Home() {
       <Navbar />
 
       {/* ====== BUSINESS PROFILE SECTION ====== */}
-      <section id="tentang" className="py-24 px-6 overflow-hidden bg-pattern">
+      <section
+        id="tentang"
+        className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 overflow-hidden bg-pattern"
+      >
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
             {/* Left: Image */}
             <div className="relative">
               <div className="relative z-10 rounded-3xl overflow-hidden shadow-2xl">
@@ -29,15 +32,15 @@ export default function Home() {
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7ki6Y1lSYOkEOohiUAcmO0FfGXAWRdKg5PsUxjgxRHqQenndDHV-VcIrVzM0CmUsEQN_ECGD1ZkFP3pFb6dKYXZZ5R6SFmpn_hUfT2duOBCDCahgE2uCYMq_ABF76_1JnNxZ3kqA6XoyjlHzoCsVyjdUceUctMAhwNohjlgPrkI0KtRxdv0R0mxIWvujSp1erYRkcz3ZOAs2PIVwFiB9gRs8bxL6HjIxgUf6P_lkAm5f5yzUojvQLeSrTS1c8PWfo4mgNkwn189g"
                   width={800}
                   height={600}
-                  className="w-full h-[600px] object-cover"
+                  className="w-full h-[300px] sm:h-[400px] lg:h-[600px] object-cover"
                   priority
                 />
               </div>
-              <div className="absolute -bottom-10 -right-10 z-20 bg-primary text-white p-8 rounded-3xl shadow-2xl max-w-xs">
-                <div className="text-5xl font-[var(--font-display)] font-bold mb-1">
+              <div className="absolute -bottom-6 -right-4 sm:-bottom-10 sm:-right-10 z-20 bg-primary text-white p-4 sm:p-6 lg:p-8 rounded-2xl sm:rounded-3xl shadow-2xl max-w-[200px] sm:max-w-xs">
+                <div className="text-3xl sm:text-4xl lg:text-5xl font-[var(--font-display)] font-bold mb-1">
                   3+
                 </div>
-                <div className="text-lg font-medium opacity-90">
+                <div className="text-sm sm:text-base lg:text-lg font-medium opacity-90">
                   Tahun Pengalaman Perawatan Profesional
                 </div>
               </div>
@@ -50,19 +53,19 @@ export default function Home() {
                 <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary font-bold text-sm tracking-wider uppercase mb-4">
                   Profil Bisnis Kami
                 </span>
-                <h2 className="text-4xl lg:text-5xl font-[var(--font-display)] font-extrabold leading-tight mb-6">
+                <h2 className="text-2xl sm:text-3xl lg:text-5xl font-[var(--font-display)] font-extrabold leading-tight mb-4 sm:mb-6">
                   Kami Menyediakan Layanan{" "}
                   <span className="text-primary">Perawatan Profesional</span>{" "}
                   untuk Kebutuhan Harian Anda
                 </h2>
-                <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+                <p className="text-base sm:text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
                   Qosama adalah solusi perawatan premium di Kota Semarang. Baik
                   itu sepatu kesayangan, tas branded, maupun helm harian — kami
                   menangani setiap item dengan teknik khusus dan teknologi
                   terkini untuk hasil maksimal.
                 </p>
               </div>
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-secondary/20 rounded-xl flex items-center justify-center flex-shrink-0">
                     <span className="material-symbols-outlined text-secondary font-bold">
@@ -103,12 +106,12 @@ export default function Home() {
       </section>
 
       {/* ====== STATS SECTION ====== */}
-      <section className="bg-primary py-20 relative overflow-hidden">
+      <section className="bg-primary py-12 sm:py-16 lg:py-20 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
         </div>
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-12">
             <StatItem number={1000} suffix="+" label="Sepatu Dibersihkan" />
             <StatItem number={500} suffix="+" label="Helm Direstorasi" />
             <StatItem number={1000} suffix="+" label="Pelanggan Puas" />
@@ -118,13 +121,16 @@ export default function Home() {
       </section>
 
       {/* ====== WORKFLOW / PROCESS SECTION ====== */}
-      <section id="proses" className="py-24 px-6 bg-white dark:bg-slate-900/50">
+      <section
+        id="proses"
+        className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-white dark:bg-slate-900/50"
+      >
         <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-20">
+          <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-14 lg:mb-20">
             <span className="text-primary font-bold tracking-widest uppercase text-sm">
               Alur Kerja
             </span>
-            <h2 className="text-4xl lg:text-5xl font-[var(--font-display)] font-extrabold mt-4 mb-6">
+            <h2 className="text-2xl sm:text-3xl lg:text-5xl font-[var(--font-display)] font-extrabold mt-3 sm:mt-4 mb-4 sm:mb-6">
               Langkah Mudah Merawat Barang Kesayangan
             </h2>
             <p className="text-slate-600 dark:text-slate-400">
@@ -135,7 +141,7 @@ export default function Home() {
 
           <div className="relative">
             <div className="hidden lg:block absolute top-1/2 left-0 w-full h-0.5 bg-slate-200 dark:bg-slate-800 -translate-y-12"></div>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12">
               <WorkflowStep
                 step={1}
                 icon="calendar_month"
@@ -168,16 +174,16 @@ export default function Home() {
       {/* ====== WHY CHOOSE US / SERVICES SECTION ====== */}
       <section
         id="layanan"
-        className="py-24 px-6 bg-slate-50 dark:bg-slate-900"
+        className="py-12 sm:py-16 lg:py-24 px-4 sm:px-6 bg-slate-50 dark:bg-slate-900"
       >
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
             {/* Left: Text */}
             <div className="order-2 lg:order-1">
               <span className="text-primary font-bold uppercase tracking-widest text-sm">
                 Mengapa Pilih Kami
               </span>
-              <h2 className="text-4xl lg:text-5xl font-[var(--font-display)] font-extrabold mt-4 mb-8">
+              <h2 className="text-2xl sm:text-3xl lg:text-5xl font-[var(--font-display)] font-extrabold mt-3 sm:mt-4 mb-5 sm:mb-8">
                 Kami Merawat Barang Anda Seperti Milik Kami Sendiri
               </h2>
               <div className="space-y-6">
@@ -200,34 +206,34 @@ export default function Home() {
             </div>
 
             {/* Right: Image Grid */}
-            <div className="order-1 lg:order-2 grid grid-cols-2 gap-4">
+            <div className="order-1 lg:order-2 grid grid-cols-2 gap-3 sm:gap-4">
               <Image
                 alt="Proses cuci sepatu"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUF_ilhx1PmFTzBoUpbidPUP2yymjiRFFErNKcAsnw7FtZ6VuoPytnJITROQgl512RaZ2sK8JXcjCK6OietDzz9l6lqCcLiJFKpFSKzFiGYayW2C1T69lY7ron66p4AutmyqVV5RpxHtIktoHibRnYjY6fStpNh7Uj1RZEu3stT0bj1BBZOgLaGUYjM_kFnM2bXeDdza6f49hQSwvFrFgEAeEDUGXrdvJ-bxmdk-0C0BM3kKPkqSHlOa7rfRhiDq1VjB3wAgxuxQE"
                 width={400}
                 height={320}
-                className="rounded-2xl h-80 w-full object-cover shadow-lg"
+                className="rounded-2xl h-40 sm:h-56 lg:h-80 w-full object-cover shadow-lg"
               />
               <Image
                 alt="Perawatan tas premium"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMvFHtmIqqIOmqpO7fwDjzf4-BMeoEsjWOvdCIpADiBrkRYIzRO-GIevE5VRzm6ymu_ixM4mKGGQtE07K8bBT1WG4T-TZQAzLeHtU03VCbXKpnp6lDYUo_gozDNXI_ytjsRlh9l_n_EirOM_RvxXEfNhqKV189azrMhiqRmJO5AqoNQVCcxHUt8YxJ_91-NiA9NZEAAw3f3Q5jXqwlI9y0UNFbi7-izbN2Hp1KE3jKJD-gUhEm_0oQ697wTs_lnxGwlTXYQU_LEMw"
                 width={400}
                 height={320}
-                className="rounded-2xl h-80 w-full object-cover shadow-lg mt-8"
+                className="rounded-2xl h-40 sm:h-56 lg:h-80 w-full object-cover shadow-lg mt-0 sm:mt-4 lg:mt-8"
               />
               <Image
                 alt="Layanan cuci helm"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_KpuSgb6kAFrF0jD9lwiEQb1F_QvDgZ1p1d8q9f2GmJ5JLwimyeuiD_GaCKwK50Ty2juvfmg1SfVucuueUCz1pV8CgNrjIzDyhnLSSfhkzT3eqWyjqw81rGYnvoc7cWsx1mmrZQ5lyO34tZFvlbK6VcnHXFuVUuwG5gZ7PjWM1YNJ3J50y5d3bS46ibnx2HYhgWnPqX0JgzmVYVRGfMgr02ABqo8gDZPIFydGCqvoMmaAvWIuA-JQxDRZ-_BoRkNUBoTVtYWjs5w"
                 width={400}
                 height={320}
-                className="rounded-2xl h-80 w-full object-cover shadow-lg -mt-8"
+                className="rounded-2xl h-40 sm:h-56 lg:h-80 w-full object-cover shadow-lg mt-0 sm:-mt-4 lg:-mt-8"
               />
               <Image
                 alt="Peralatan pembersih profesional"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuCP8bFDuZ8aRrF3h6Gyw21IYo5ipbAqRg16dVnaBRRwU9Jdq3dYMMKtA_rv3lvXGfcZkJ1kGvLJktO1rfJtP55pJkjMRcWkzxe9Z9mRkYoZ_151RrhjmwkDxuMrLcnrQQ-2PnyEYWcVhHMU1SAMccH4Xuo8PugZGhXlKbNJoNyBIF7ACz1cY-j6TcvYSRDjs11YNtUorjIXqXafbyzpYkpnZmgb8_eGHckjU4eoP4Z7z4LMKZgXDiycu-5OQdYrpDdCkbZIbXxGrAA"
                 width={400}
                 height={320}
-                className="rounded-2xl h-80 w-full object-cover shadow-lg"
+                className="rounded-2xl h-40 sm:h-56 lg:h-80 w-full object-cover shadow-lg"
               />
             </div>
           </div>
@@ -235,13 +241,13 @@ export default function Home() {
       </section>
 
       {/* ====== CTA BANNER ====== */}
-      <section className="py-16 px-6">
-        <div className="max-w-7xl mx-auto bg-secondary rounded-[2.5rem] p-12 lg:p-20 relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-12">
+      <section className="py-10 sm:py-16 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto bg-secondary rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-10 lg:p-20 relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8 sm:gap-12">
           <div className="relative z-10 max-w-xl text-center lg:text-left">
-            <h2 className="text-4xl lg:text-5xl font-[var(--font-display)] font-extrabold text-slate-900 mb-6">
+            <h2 className="text-2xl sm:text-3xl lg:text-5xl font-[var(--font-display)] font-extrabold text-slate-900 mb-4 sm:mb-6">
               Siap untuk Gaya Hidup Lebih Bersih?
             </h2>
-            <p className="text-xl text-slate-800 font-medium mb-10">
+            <p className="text-base sm:text-lg lg:text-xl text-slate-800 font-medium mb-6 sm:mb-10">
               Dapatkan diskon 20% untuk pesanan pertama Anda. Hubungi kami
               sekarang!
             </p>
@@ -295,7 +301,7 @@ function StatItem({
 }) {
   return (
     <div className="text-center group">
-      <div className="text-secondary text-5xl font-[var(--font-display)] font-extrabold mb-3 group-hover:scale-110 transition-transform">
+      <div className="text-secondary text-3xl sm:text-4xl lg:text-5xl font-[var(--font-display)] font-extrabold mb-2 sm:mb-3 group-hover:scale-110 transition-transform">
         <CountUp end={number} enableScrollSpy scrollSpyOnce />
         {suffix}
       </div>
@@ -326,17 +332,19 @@ function WorkflowStep({
       className="relative text-center group"
     >
       <div className="mb-8 relative inline-block">
-        <div className="w-24 h-24 bg-white dark:bg-slate-800 rounded-3xl shadow-xl flex items-center justify-center relative z-10 group-hover:scale-110 transition-transform duration-300 border border-slate-100 dark:border-slate-700">
-          <span className="material-symbols-outlined text-primary text-4xl">
+        <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-white dark:bg-slate-800 rounded-2xl sm:rounded-3xl shadow-xl flex items-center justify-center relative z-10 group-hover:scale-110 transition-transform duration-300 border border-slate-100 dark:border-slate-700">
+          <span className="material-symbols-outlined text-primary text-2xl sm:text-3xl lg:text-4xl">
             {icon}
           </span>
         </div>
-        <div className="absolute -top-3 -right-3 w-10 h-10 bg-secondary rounded-full flex items-center justify-center font-bold text-slate-900 shadow-lg z-20">
+        <div className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 w-8 h-8 sm:w-10 sm:h-10 bg-secondary rounded-full flex items-center justify-center font-bold text-xs sm:text-base text-slate-900 shadow-lg z-20">
           {step}
         </div>
       </div>
-      <h3 className="text-xl font-bold mb-4">{title}</h3>
-      <p className="text-slate-500 text-sm leading-relaxed px-4">
+      <h3 className="text-base sm:text-lg lg:text-xl font-bold mb-2 sm:mb-4">
+        {title}
+      </h3>
+      <p className="text-slate-500 text-xs sm:text-sm leading-relaxed px-2 sm:px-4">
         {description}
       </p>
     </motion.div>

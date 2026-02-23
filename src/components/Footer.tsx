@@ -3,8 +3,11 @@ const WA_LINK =
 
 export default function Footer() {
   return (
-    <footer id="kontak" className="bg-slate-950 text-slate-400 py-16 px-6">
-      <div className="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-4 gap-12">
+    <footer
+      id="kontak"
+      className="bg-slate-950 text-slate-400 py-10 sm:py-16 px-4 sm:px-6"
+    >
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12">
         {/* Brand */}
         <div className="space-y-6">
           <div className="flex items-center gap-2">
@@ -51,7 +54,7 @@ export default function Footer() {
 
         {/* Quick Links */}
         <div>
-          <h4 className="text-white font-bold text-lg mb-8 uppercase tracking-wider">
+          <h4 className="text-white font-bold text-lg mb-4 sm:mb-8 uppercase tracking-wider">
             Menu
           </h4>
           <ul className="space-y-4">
@@ -92,7 +95,7 @@ export default function Footer() {
 
         {/* Services */}
         <div>
-          <h4 className="text-white font-bold text-lg mb-8 uppercase tracking-wider">
+          <h4 className="text-white font-bold text-lg mb-4 sm:mb-8 uppercase tracking-wider">
             Layanan
           </h4>
           <ul className="space-y-4">
@@ -141,7 +144,7 @@ export default function Footer() {
 
         {/* Location */}
         <div>
-          <h4 className="text-white font-bold text-lg mb-8 uppercase tracking-wider">
+          <h4 className="text-white font-bold text-lg mb-4 sm:mb-8 uppercase tracking-wider">
             Lokasi
           </h4>
           <p className="mb-6 leading-relaxed">
@@ -158,7 +161,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto pt-16 mt-16 border-t border-slate-900 text-center text-sm">
+      <div className="max-w-7xl mx-auto pt-8 mt-8 sm:pt-16 sm:mt-16 border-t border-slate-900 text-center text-sm">
         <p>© 2026 Qosama Professional Services. All rights reserved.</p>
       </div>
     </footer>
