@@ -1,210 +1,366 @@
 "use client";
 
 import Navbar from "@/components/Navbar";
-import SequenceScroll from "@/components/SequenceScroll";
-import TextReveal from "@/components/TextReveal";
-import { ReactLenis } from "lenis/react";
+import Footer from "@/components/Footer";
 import CountUp from "react-countup";
 import { motion } from "motion/react";
 import Image from "next/image";
 
+const WA_LINK =
+  "https://wa.me/6285162810074?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20Qosama.%20Mohon%20informasi%20lebih%20lanjut.";
+
 export default function Home() {
   return (
-    <ReactLenis root>
-      <main className="relative bg-[#1e1e20] text-white selection:bg-white selection:text-black">
-        <Navbar />
+    <main
+      id="beranda"
+      className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-[var(--font-body)] transition-colors duration-300"
+    >
+      <Navbar />
 
-        {/* Hero Section with Scrollytelling */}
-        <div id="home">
-            <SequenceScroll />
+      {/* ====== BUSINESS PROFILE SECTION ====== */}
+      <section id="tentang" className="py-24 px-6 overflow-hidden bg-pattern">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left: Image */}
+            <div className="relative">
+              <div className="relative z-10 rounded-3xl overflow-hidden shadow-2xl">
+                <Image
+                  alt="Qosama professional shoe cleaning"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7ki6Y1lSYOkEOohiUAcmO0FfGXAWRdKg5PsUxjgxRHqQenndDHV-VcIrVzM0CmUsEQN_ECGD1ZkFP3pFb6dKYXZZ5R6SFmpn_hUfT2duOBCDCahgE2uCYMq_ABF76_1JnNxZ3kqA6XoyjlHzoCsVyjdUceUctMAhwNohjlgPrkI0KtRxdv0R0mxIWvujSp1erYRkcz3ZOAs2PIVwFiB9gRs8bxL6HjIxgUf6P_lkAm5f5yzUojvQLeSrTS1c8PWfo4mgNkwn189g"
+                  width={800}
+                  height={600}
+                  className="w-full h-[600px] object-cover"
+                  priority
+                />
+              </div>
+              <div className="absolute -bottom-10 -right-10 z-20 bg-primary text-white p-8 rounded-3xl shadow-2xl max-w-xs">
+                <div className="text-5xl font-[var(--font-display)] font-bold mb-1">
+                  3+
+                </div>
+                <div className="text-lg font-medium opacity-90">
+                  Tahun Pengalaman Perawatan Profesional
+                </div>
+              </div>
+              <div className="absolute -top-10 -left-10 w-40 h-40 bg-secondary rounded-full blur-3xl opacity-20"></div>
+            </div>
+
+            {/* Right: Text */}
+            <div className="space-y-8">
+              <div>
+                <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary font-bold text-sm tracking-wider uppercase mb-4">
+                  Profil Bisnis Kami
+                </span>
+                <h2 className="text-4xl lg:text-5xl font-[var(--font-display)] font-extrabold leading-tight mb-6">
+                  Kami Menyediakan Layanan{" "}
+                  <span className="text-primary">Perawatan Profesional</span>{" "}
+                  untuk Kebutuhan Harian Anda
+                </h2>
+                <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+                  Qosama adalah solusi perawatan premium di Kota Semarang. Baik
+                  itu sepatu kesayangan, tas branded, maupun helm harian — kami
+                  menangani setiap item dengan teknik khusus dan teknologi
+                  terkini untuk hasil maksimal.
+                </p>
+              </div>
+              <div className="grid grid-cols-2 gap-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-secondary/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <span className="material-symbols-outlined text-secondary font-bold">
+                      check_circle
+                    </span>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-lg">Ramah Lingkungan</h4>
+                    <p className="text-sm text-slate-500">
+                      Aman untuk Anda dan alam.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-secondary/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <span className="material-symbols-outlined text-secondary font-bold">
+                      shutter_speed
+                    </span>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-lg">Pengerjaan Cepat</h4>
+                    <p className="text-sm text-slate-500">
+                      Layanan express 24 jam.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <a
+                href="#layanan"
+                className="bg-primary text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-800 transition-all inline-flex items-center gap-3"
+              >
+                Selengkapnya
+                <span className="material-symbols-outlined">chevron_right</span>
+              </a>
+            </div>
+          </div>
         </div>
+      </section>
 
-        {/* Content overlapping the end of the scroll sequence */}
-        <div className="relative z-10 -mt-[100vh] bg-[#1e1e20] pt-20 rounded-t-[3rem] shadow-[0_-50px_100px_rgba(0,0,0,0.5)]">
-          
-          {/* About Section */}
-          <section id="tentang" className="container mx-auto px-6 py-20 md:py-40 flex flex-col items-center text-center">
-            <h3 className="text-sm md:text-base font-bold uppercase tracking-widest text-[#888] mb-8">
-              Tentang Kami
-            </h3>
-            <TextReveal
-              text="Qosama adalah salah satu jasa untuk membersihkan dan merawat sepatu, tas dan helm di Kota Semarang."
-              className="text-4xl md:text-7xl font-bold max-w-5xl justify-center"
-            />
-          </section>
+      {/* ====== STATS SECTION ====== */}
+      <section className="bg-primary py-20 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
+        </div>
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+            <StatItem number={1000} suffix="+" label="Sepatu Dibersihkan" />
+            <StatItem number={500} suffix="+" label="Helm Direstorasi" />
+            <StatItem number={1000} suffix="+" label="Pelanggan Puas" />
+            <StatItem number={850} suffix="+" label="Tas Dibersihkan" />
+          </div>
+        </div>
+      </section>
 
-          {/* Bento Grid Features */}
-          <section id="fitur" className="container mx-auto px-6 py-20">
-            <h3 className="text-sm md:text-base font-bold uppercase tracking-widest text-[#888] mb-12">
-              Layanan Kami
-            </h3>
-            <div className="flex flex-col md:grid md:grid-cols-3 gap-2 md:gap-6 h-[85vh] md:h-[600px]">
-              {/* Service 1: Sepatu */}
-              <a 
-                href="https://wa.me/6285162810074?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20sepatu.%20Mohon%20informasi%20lebih%20lanjut."
+      {/* ====== WORKFLOW / PROCESS SECTION ====== */}
+      <section id="proses" className="py-24 px-6 bg-white dark:bg-slate-900/50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <span className="text-primary font-bold tracking-widest uppercase text-sm">
+              Alur Kerja
+            </span>
+            <h2 className="text-4xl lg:text-5xl font-[var(--font-display)] font-extrabold mt-4 mb-6">
+              Langkah Mudah Merawat Barang Kesayangan
+            </h2>
+            <p className="text-slate-600 dark:text-slate-400">
+              Proses kami yang seamless memastikan barang Anda dirawat dari saat
+              meninggalkan rumah hingga kembali seperti baru.
+            </p>
+          </div>
+
+          <div className="relative">
+            <div className="hidden lg:block absolute top-1/2 left-0 w-full h-0.5 bg-slate-200 dark:bg-slate-800 -translate-y-12"></div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
+              <WorkflowStep
+                step={1}
+                icon="calendar_month"
+                title="Pesan Online"
+                description="Jadwalkan perawatan via WhatsApp atau kunjungi langsung outlet kami."
+              />
+              <WorkflowStep
+                step={2}
+                icon="local_shipping"
+                title="Jemput di Rumah"
+                description="Tim profesional kami akan menjemput barang Anda sesuai waktu yang disepakati."
+              />
+              <WorkflowStep
+                step={3}
+                icon="wash"
+                title="Perawatan Profesional"
+                description="Pembersihan ahli menggunakan produk premium dan peralatan khusus."
+              />
+              <WorkflowStep
+                step={4}
+                icon="inventory_2"
+                title="Express Delivery"
+                description="Barang bersih dan terkemas rapi diantar kembali ke pintu Anda."
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ====== WHY CHOOSE US / SERVICES SECTION ====== */}
+      <section
+        id="layanan"
+        className="py-24 px-6 bg-slate-50 dark:bg-slate-900"
+      >
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left: Text */}
+            <div className="order-2 lg:order-1">
+              <span className="text-primary font-bold uppercase tracking-widest text-sm">
+                Mengapa Pilih Kami
+              </span>
+              <h2 className="text-4xl lg:text-5xl font-[var(--font-display)] font-extrabold mt-4 mb-8">
+                Kami Merawat Barang Anda Seperti Milik Kami Sendiri
+              </h2>
+              <div className="space-y-6">
+                <FeatureCard
+                  icon="eco"
+                  title="Perawatan Ramah Lingkungan"
+                  description="Kami menggunakan deterjen biodegradable dan teknologi hemat air di semua proses kami."
+                />
+                <FeatureCard
+                  icon="verified_user"
+                  title="Aman & Terjamin"
+                  description="Barang Anda diasuransikan penuh selama transit dan perawatan. Jaminan ketenangan pikiran."
+                />
+                <FeatureCard
+                  icon="style"
+                  title="Penanganan Spesialis"
+                  description="Perawatan ahli untuk kulit, suede, canvas, dan material premium dari berbagai brand."
+                />
+              </div>
+            </div>
+
+            {/* Right: Image Grid */}
+            <div className="order-1 lg:order-2 grid grid-cols-2 gap-4">
+              <Image
+                alt="Proses cuci sepatu"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUF_ilhx1PmFTzBoUpbidPUP2yymjiRFFErNKcAsnw7FtZ6VuoPytnJITROQgl512RaZ2sK8JXcjCK6OietDzz9l6lqCcLiJFKpFSKzFiGYayW2C1T69lY7ron66p4AutmyqVV5RpxHtIktoHibRnYjY6fStpNh7Uj1RZEu3stT0bj1BBZOgLaGUYjM_kFnM2bXeDdza6f49hQSwvFrFgEAeEDUGXrdvJ-bxmdk-0C0BM3kKPkqSHlOa7rfRhiDq1VjB3wAgxuxQE"
+                width={400}
+                height={320}
+                className="rounded-2xl h-80 w-full object-cover shadow-lg"
+              />
+              <Image
+                alt="Perawatan tas premium"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMvFHtmIqqIOmqpO7fwDjzf4-BMeoEsjWOvdCIpADiBrkRYIzRO-GIevE5VRzm6ymu_ixM4mKGGQtE07K8bBT1WG4T-TZQAzLeHtU03VCbXKpnp6lDYUo_gozDNXI_ytjsRlh9l_n_EirOM_RvxXEfNhqKV189azrMhiqRmJO5AqoNQVCcxHUt8YxJ_91-NiA9NZEAAw3f3Q5jXqwlI9y0UNFbi7-izbN2Hp1KE3jKJD-gUhEm_0oQ697wTs_lnxGwlTXYQU_LEMw"
+                width={400}
+                height={320}
+                className="rounded-2xl h-80 w-full object-cover shadow-lg mt-8"
+              />
+              <Image
+                alt="Layanan cuci helm"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_KpuSgb6kAFrF0jD9lwiEQb1F_QvDgZ1p1d8q9f2GmJ5JLwimyeuiD_GaCKwK50Ty2juvfmg1SfVucuueUCz1pV8CgNrjIzDyhnLSSfhkzT3eqWyjqw81rGYnvoc7cWsx1mmrZQ5lyO34tZFvlbK6VcnHXFuVUuwG5gZ7PjWM1YNJ3J50y5d3bS46ibnx2HYhgWnPqX0JgzmVYVRGfMgr02ABqo8gDZPIFydGCqvoMmaAvWIuA-JQxDRZ-_BoRkNUBoTVtYWjs5w"
+                width={400}
+                height={320}
+                className="rounded-2xl h-80 w-full object-cover shadow-lg -mt-8"
+              />
+              <Image
+                alt="Peralatan pembersih profesional"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCP8bFDuZ8aRrF3h6Gyw21IYo5ipbAqRg16dVnaBRRwU9Jdq3dYMMKtA_rv3lvXGfcZkJ1kGvLJktO1rfJtP55pJkjMRcWkzxe9Z9mRkYoZ_151RrhjmwkDxuMrLcnrQQ-2PnyEYWcVhHMU1SAMccH4Xuo8PugZGhXlKbNJoNyBIF7ACz1cY-j6TcvYSRDjs11YNtUorjIXqXafbyzpYkpnZmgb8_eGHckjU4eoP4Z7z4LMKZgXDiycu-5OQdYrpDdCkbZIbXxGrAA"
+                width={400}
+                height={320}
+                className="rounded-2xl h-80 w-full object-cover shadow-lg"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ====== CTA BANNER ====== */}
+      <section className="py-16 px-6">
+        <div className="max-w-7xl mx-auto bg-secondary rounded-[2.5rem] p-12 lg:p-20 relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-12">
+          <div className="relative z-10 max-w-xl text-center lg:text-left">
+            <h2 className="text-4xl lg:text-5xl font-[var(--font-display)] font-extrabold text-slate-900 mb-6">
+              Siap untuk Gaya Hidup Lebih Bersih?
+            </h2>
+            <p className="text-xl text-slate-800 font-medium mb-10">
+              Dapatkan diskon 20% untuk pesanan pertama Anda. Hubungi kami
+              sekarang!
+            </p>
+            <div className="flex flex-wrap justify-center lg:justify-start gap-4">
+              <a
+                href={WA_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="relative group overflow-hidden rounded-3xl bg-[#2a2a2c] border border-[#333] cursor-pointer flex-1 md:h-full"
+                className="bg-primary text-white px-10 py-4 rounded-xl font-bold shadow-xl hover:scale-105 transition-all inline-block"
               >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10"/>
-                <Image src="/services/sepatu.jpg" alt="Cuci Sepatu" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-                <div className="absolute bottom-4 left-6 md:bottom-8 md:left-8 z-20 max-w-xl pr-4">
-                    <h4 className="text-xl md:text-3xl font-bold mb-1 md:mb-4 group-hover:text-cyan-400 transition-colors">Cuci Sepatu</h4>
-                    <p className="text-gray-300 text-xs md:text-lg hidden md:block">
-                        Perawatan Deep Cleaning menyeluruh untuk segala jenis material sepatu (Canvas, Suede, Leather). 
-                        Mengembalikan kebersihan dan warna asli sepatu kesayangan Anda dengan teknik aman.
-                    </p>
-                     <p className="text-gray-300 text-xs md:hidden">
-                        Perawatan Deep Cleaning menyeluruh untuk segala jenis material sepatu.
-                    </p>
-                </div>
+                Mulai Sekarang
               </a>
-
-              {/* Service 2: Helm */}
-              <a 
-                 href="https://wa.me/6285162810074?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20helm.%20Mohon%20informasi%20lebih%20lanjut."
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className="relative group overflow-hidden rounded-3xl bg-[#2a2a2c] border border-[#333] cursor-pointer flex-1 md:h-full"
-                >
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10"/>
-                <Image src="/services/helm.jpg" alt="Cuci Helm" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-                
-                <div className="absolute bottom-4 left-6 md:bottom-8 md:left-8 z-20 max-w-xl pr-4">
-                    <h4 className="text-xl md:text-2xl font-bold mb-1 md:mb-3 group-hover:text-cyan-400 transition-colors">Cuci Helm</h4>
-                    <p className="text-gray-300 text-xs md:text-sm leading-relaxed hidden md:block">
-                        Sterilisasi total interior & eksterior helm. Bebas bakteri, jamur, dan bau apek. 
-                        Aman untuk kulit wajah dan menjaga kualitas busa agar tetap empuk dan nyaman.
-                    </p>
-                     <p className="text-gray-300 text-xs md:hidden">
-                        Sterilisasi total interior & eksterior helm. Bebas bakteri, jamur, dan bau apek.
-                    </p>
-                </div>
-              </a>
-
-              {/* Service 3: Tas */}
-              <a 
-                 href="https://wa.me/6285162810074?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20tas.%20Mohon%20informasi%20lebih%20lanjut."
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 className="relative group overflow-hidden rounded-3xl bg-[#2a2a2c] border border-[#333] cursor-pointer flex-1 md:h-full"
-                >
-                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10"/>
-                 <Image src="/services/tas.jpg" alt="Cuci Tas" fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
-
-                 <div className="absolute bottom-4 left-6 md:bottom-8 md:left-8 z-20 max-w-xl pr-4">
-                    <h4 className="text-xl md:text-2xl font-bold mb-1 md:mb-3 group-hover:text-cyan-400 transition-colors">Cuci Tas</h4>
-                    <p className="text-gray-300 text-xs md:text-sm leading-relaxed hidden md:block">
-                        Treatment spa khusus tas branded maupun harian. Membersihkan noda membandel 
-                        sekaligus merawat tekstur kulit dan kain agar tetap awet dan terlihat baru.
-                    </p>
-                     <p className="text-gray-300 text-xs md:hidden">
-                        Treatment spa khusus tas branded maupun harian.
-                    </p>
-                </div>
+              <a
+                href="https://wa.me/6285162810074"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white text-slate-900 px-10 py-4 rounded-xl font-bold shadow-md hover:scale-105 transition-all inline-flex items-center gap-2"
+              >
+                <span className="material-symbols-outlined">call</span>
+                Hubungi Kami
               </a>
             </div>
-          </section>
-
-          {/* Stats Section */}
-          <section className="border-y border-[#333] bg-[#1e1e20]">
-              <div className="container mx-auto px-6 py-20 grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
-                  <StatItem number={1000} suffix="+" label="Sepatu Direstorasi" />
-                  <StatItem number={98} suffix="%" label="Pelanggan Puas" />
-                  <StatItem number={24} suffix="Jam" label="Layanan Kilat" />
-                  <StatItem number={1} suffix="" label="Cabang Kota" />
-              </div>
-          </section>
-
-          {/* Testimonials */}
-          <section className="container mx-auto px-6 py-20 md:py-32">
-             <h3 className="text-sm md:text-base font-bold uppercase tracking-widest text-[#888] mb-12 text-center">
-              Kata Mereka
-            </h3>
-            <div className="flex overflow-hidden relative">
-                <motion.div 
-                    animate={{ x: ["0%", "-50%"] }}
-                    transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-                    className="flex gap-12 whitespace-nowrap"
-                >
-                    {[1,2,3,4].map((i) => (
-                        <div key={i} className="text-5xl md:text-8xl font-bold text-transparent stroke-text opacity-50 hover:opacity-100 transition-opacity cursor-default">
-                             &quot;PELAYANAN BINTANG LIMA. HASIL AJAIB.&quot; — RIZKY
-                        </div>
-                    ))}
-                </motion.div>
+          </div>
+          <div className="relative z-10 hidden lg:block">
+            <div className="w-80 h-80 bg-white/20 rounded-full flex items-center justify-center p-8 backdrop-blur-sm">
+              <span className="material-symbols-outlined text-[120px] text-white animate-bounce">
+                shopping_basket
+              </span>
             </div>
-          </section>
-          
-           {/* CTA Section */}
-           <section id="booking" className="relative h-[60vh] md:h-[80vh] flex items-center justify-center overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-[#1e1e20] to-black z-0" />
-                <motion.div 
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  whileInView={{ scale: 1, opacity: 1 }}
-                  transition={{ duration: 1 }}
-                  className="relative z-10 text-center px-4"
-                >
-                    <h2 className="text-3xl md:text-9xl font-bold mb-8">SIAP MELANGKAH?</h2>
-                    <p className="text-base md:text-xl text-gray-400 mb-8 md:mb-12">Jangan biarkan kotoran menghambat gayamu.</p>
-                    <a href="https://wa.me/6285162810074?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20sepatu.%20Mohon%20informasi%20lebih%20lanjut.%20Terima%20kasih." target="_blank" rel="noopener noreferrer" className="inline-block px-8 py-4 md:px-12 md:py-6 bg-white text-black text-lg md:text-xl font-bold rounded-full hover:bg-gray-200 transition-colors">
-                        BOOKING SEKARANG
-                    </a>
-                </motion.div>
-           </section>
-
-          {/* Footer */}
-          <footer id="kontak" className="bg-black py-20 px-6 border-t border-[#333]">
-             <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
-                 <div>
-                     <h3 className="text-3xl font-bold mb-6">QOSAMA.</h3>
-                     <p className="text-gray-500">Solusi bersih sepatu, tas dan helm Anda.</p>
-                 </div>
-                 <div>
-                     <h4 className="font-bold mb-6 text-gray-300">LAYANAN</h4>
-                     <ul className="space-y-4 text-gray-500">
-                         <li><a href="https://wa.me/6285162810074?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20sepatu.%20Mohon%20informasi%20lebih%20lanjut.%20Terima%20kasih." target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Cuci Sepatu</a></li>
-                         <li><a href="https://wa.me/6285162810074?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20helm.%20Mohon%20informasi%20lebih%20lanjut.%20Terima%20kasih." target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Cuci Helm</a></li>
-                         <li><a href="https://wa.me/6285162810074?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20tas.%20Mohon%20informasi%20lebih%20lanjut.%20Terima%20kasih." target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Cuci Tas</a></li>
-                     </ul>
-                 </div>
-                 <div>
-                     <h4 className="font-bold mb-6 text-gray-300">SOCIAL</h4>
-                     <ul className="space-y-4 text-gray-500">
-                         <li><a href="https://instagram.com/qosama_clean" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Instagram</a></li>
-                         <li><a href="https://wa.me/6285162810074" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Whatsapp</a></li>
-                     </ul>
-                 </div>
-                 <div>
-                     <h4 className="font-bold mb-6 text-gray-300">LOKASI</h4>
-                     <p className="text-gray-500">
-                         Jl Mataram, Jl. Kp. Rahayu Raya Jl. Mertojoyo No.118, Kota Semarang
-                     </p>
-                 </div>
-             </div>
-             <div className="container mx-auto mt-20 pt-8 border-t border-[#333] text-center text-gray-600 text-sm">
-                 © 2026 QOSAMA. All Rights Reserved.
-             </div>
-          </footer>
+          </div>
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
         </div>
-        
-        <style jsx global>{`
-           .stroke-text {
-               -webkit-text-stroke: 1px rgba(255,255,255,0.5);
-           }
-        `}</style>
-      </main>
-    </ReactLenis>
+      </section>
+
+      <Footer />
+    </main>
   );
 }
 
-function StatItem({ number, suffix, label }: { number: number, suffix: string, label: string }) {
-    return (
-        <div>
-            <div className="text-4xl md:text-7xl font-bold mb-2 text-white">
-                <CountUp end={number} enableScrollSpy scrollSpyOnce />{suffix}
-            </div>
-            <div className="text-gray-500 uppercase tracking-widest text-sm">{label}</div>
+/* ====== SUB-COMPONENTS ====== */
+
+function StatItem({
+  number,
+  suffix,
+  label,
+}: {
+  number: number;
+  suffix: string;
+  label: string;
+}) {
+  return (
+    <div className="text-center group">
+      <div className="text-secondary text-5xl font-[var(--font-display)] font-extrabold mb-3 group-hover:scale-110 transition-transform">
+        <CountUp end={number} enableScrollSpy scrollSpyOnce />
+        {suffix}
+      </div>
+      <div className="text-blue-100 font-medium tracking-wide uppercase text-sm">
+        {label}
+      </div>
+    </div>
+  );
+}
+
+function WorkflowStep({
+  step,
+  icon,
+  title,
+  description,
+}: {
+  step: number;
+  icon: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: step * 0.1 }}
+      className="relative text-center group"
+    >
+      <div className="mb-8 relative inline-block">
+        <div className="w-24 h-24 bg-white dark:bg-slate-800 rounded-3xl shadow-xl flex items-center justify-center relative z-10 group-hover:scale-110 transition-transform duration-300 border border-slate-100 dark:border-slate-700">
+          <span className="material-symbols-outlined text-primary text-4xl">
+            {icon}
+          </span>
         </div>
-    )
+        <div className="absolute -top-3 -right-3 w-10 h-10 bg-secondary rounded-full flex items-center justify-center font-bold text-slate-900 shadow-lg z-20">
+          {step}
+        </div>
+      </div>
+      <h3 className="text-xl font-bold mb-4">{title}</h3>
+      <p className="text-slate-500 text-sm leading-relaxed px-4">
+        {description}
+      </p>
+    </motion.div>
+  );
+}
+
+function FeatureCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex gap-6">
+      <div className="w-14 h-14 bg-blue-50 dark:bg-blue-900/30 rounded-full flex items-center justify-center flex-shrink-0">
+        <span className="material-symbols-outlined text-primary">{icon}</span>
+      </div>
+      <div>
+        <h4 className="text-xl font-bold mb-2">{title}</h4>
+        <p className="text-slate-500 dark:text-slate-400">{description}</p>
+      </div>
+    </div>
+  );
 }
