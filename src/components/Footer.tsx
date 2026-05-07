@@ -97,10 +97,10 @@ export default function Footer() {
                   label: "Cuci Tas",
                   href: "https://wa.me/6285162810074?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20cuci%20tas.%20Mohon%20informasi%20lebih%20lanjut.",
                 },
-                {
-                  label: "Express Delivery",
-                  href: "https://wa.me/6285162810074?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20express.%20Mohon%20informasi%20lebih%20lanjut.",
-                },
+                // {
+                //   label: "Express Delivery",
+                //   href: "https://wa.me/6285162810074?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20express.%20Mohon%20informasi%20lebih%20lanjut.",
+                // },
               ].map((item) => (
                 <li key={item.label}>
                   <a

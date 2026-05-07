@@ -154,48 +154,57 @@ export default function Home() {
             </div>
 
             {/* Right: Image Grid */}
-            <div className="order-1 lg:order-2 flex flex-col gap-3 sm:gap-4">
-              {/* Top row: 2 equal images */}
-              <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                <div className="group relative h-40 w-full overflow-hidden rounded-2xl shadow-lg xs:h-44 sm:h-56 lg:h-64">
-                  <Image
-                    alt="Cuci tas ransel"
-                    src="/services/tas_user.jpg"
-                    fill
-                    sizes="(min-width: 1024px) 296px, (min-width: 640px) calc((100vw - 64px) / 2), calc((100vw - 44px) / 2)"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
-                  <span className="absolute bottom-3 left-3 rounded-full bg-black/40 px-2.5 py-1 text-xs font-bold text-white backdrop-blur-sm">
-                    Cuci Tas
-                  </span>
-                </div>
-                <div className="group relative h-40 w-full overflow-hidden rounded-2xl shadow-lg xs:h-44 sm:h-56 lg:h-64">
-                  <Image
-                    alt="Cuci sepatu sneakers"
-                    src="/services/sepatu_user.png"
-                    fill
-                    sizes="(min-width: 1024px) 296px, (min-width: 640px) calc((100vw - 64px) / 2), calc((100vw - 44px) / 2)"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
-                  <span className="absolute bottom-3 left-3 rounded-full bg-black/40 px-2.5 py-1 text-xs font-bold text-white backdrop-blur-sm">
-                    Cuci Sepatu
-                  </span>
-                </div>
+            <div className="order-1 lg:order-2 grid grid-cols-2 gap-3 sm:gap-4">
+              <div className="group relative h-40 w-full overflow-hidden rounded-2xl shadow-lg xs:h-44 sm:h-56 lg:h-64">
+                <Image
+                  alt="Cuci tas ransel"
+                  src="/services/tas_user.jpg"
+                  fill
+                  sizes="(min-width: 1024px) 296px, (min-width: 640px) calc((100vw - 64px) / 2), calc((100vw - 44px) / 2)"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+                <span className="absolute bottom-3 left-3 rounded-full bg-black/40 px-2.5 py-1 text-xs font-bold text-white backdrop-blur-sm">
+                  Cuci Tas
+                </span>
               </div>
-              {/* Bottom: 1 wide image */}
+              <div className="group relative h-40 w-full overflow-hidden rounded-2xl shadow-lg xs:h-44 sm:h-56 lg:h-64">
+                <Image
+                  alt="Cuci sepatu sneakers"
+                  src="/services/sepatu_user.png"
+                  fill
+                  sizes="(min-width: 1024px) 296px, (min-width: 640px) calc((100vw - 64px) / 2), calc((100vw - 44px) / 2)"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+                <span className="absolute bottom-3 left-3 rounded-full bg-black/40 px-2.5 py-1 text-xs font-bold text-white backdrop-blur-sm">
+                  Cuci Sepatu
+                </span>
+              </div>
               <div className="group relative h-40 w-full overflow-hidden rounded-2xl shadow-lg xs:h-44 sm:h-56 lg:h-64">
                 <Image
                   alt="Cuci helm motor"
-                  src="/services/helm_user.png"
+                  src="/services/helm.jpg"
                   fill
-                  sizes="(min-width: 1024px) 608px, calc(100vw - 32px)"
+                  sizes="(min-width: 1024px) 296px, (min-width: 640px) calc((100vw - 64px) / 2), calc((100vw - 44px) / 2)"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
                 <span className="absolute bottom-3 left-3 rounded-full bg-black/40 px-2.5 py-1 text-xs font-bold text-white backdrop-blur-sm">
                   Cuci Helm
+                </span>
+              </div>
+              <div className="group relative h-40 w-full overflow-hidden rounded-2xl shadow-lg xs:h-44 sm:h-56 lg:h-64">
+                <Image
+                  alt="Laundry Pakaian"
+                  src="/services/laundry.jpg"
+                  fill
+                  sizes="(min-width: 1024px) 296px, (min-width: 640px) calc((100vw - 64px) / 2), calc((100vw - 44px) / 2)"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+                <span className="absolute bottom-3 left-3 rounded-full bg-black/40 px-2.5 py-1 text-xs font-bold text-white backdrop-blur-sm">
+                  Laundry Pakaian
                 </span>
               </div>
             </div>
