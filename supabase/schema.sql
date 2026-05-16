@@ -58,3 +58,31 @@ on public.customers
 for delete
 to authenticated
 using (true);
+
+-- ── Site Settings (toggle Customer Loyalty visibility) ──
+
+create table if not exists public.site_settings (
+  key text primary key,
+  value text not null
+);
+
+alter table public.site_settings enable row level security;
+
+drop policy if exists "Settings readable by all" on public.site_settings;
+create policy "Settings readable by all"
+on public.site_settings
+for select
+to anon, authenticated
+using (true);
+
+drop policy if exists "Settings editable by authenticated" on public.site_settings;
+create policy "Settings editable by authenticated"
+on public.site_settings
+for update
+to authenticated
+using (true)
+with check (true);
+
+insert into public.site_settings (key, value)
+  values ('show_loyalty', 'true')
+  on conflict (key) do nothing;

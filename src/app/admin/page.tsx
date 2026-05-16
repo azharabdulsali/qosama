@@ -1,10 +1,12 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import type { Session } from "@supabase/supabase-js";
 import Link from "next/link";
 import {
   Check,
+  Eye,
+  EyeOff,
   Trash2,
   Gift,
   LogOut,
@@ -17,6 +19,8 @@ import {
 import { getRewardStats } from "@/lib/rewards";
 import { supabase } from "@/lib/supabase/client";
 import type { Customer } from "@/lib/supabase/types";
+
+const INACTIVITY_TIMEOUT = 10 * 60 * 1000;
 
 export default function AdminPage() {
   const [session, setSession] = useState<Session | null>(null);
@@ -40,6 +44,9 @@ export default function AdminPage() {
   const [totalOrders, setTotalOrders] = useState("");
   const [formError, setFormError] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [dialogMode, setDialogMode] = useState<"add" | "edit">("add");
+  const [showLoyalty, setShowLoyalty] = useState(true);
+  const inactivityTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const filteredCustomers = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
@@ -89,6 +96,44 @@ export default function AdminPage() {
     setIsCustomersLoading(false);
   };
 
+  const loadSettings = async () => {
+    const { data } = await supabase
+      .from("site_settings")
+      .select("value")
+      .eq("key", "show_loyalty")
+      .single();
+    if (data) setShowLoyalty(data.value === "true");
+  };
+
+  const toggleLoyalty = async () => {
+    const next = !showLoyalty;
+    setActionMessage("");
+    const { error } = await supabase
+      .from("site_settings")
+      .update({ value: String(next) })
+      .eq("key", "show_loyalty");
+    if (!error) {
+      setShowLoyalty(next);
+      setActionMessage(
+        next
+          ? "Customer Loyalty ditampilkan di dashboard publik."
+          : "Customer Loyalty disembunyikan dari dashboard publik."
+      );
+    } else {
+      setActionMessage("Gagal mengubah pengaturan.");
+    }
+  };
+
+  const openEditDialog = (customer: Customer) => {
+    setSelectedCustomer(customer);
+    setCustomerName(customer.name);
+    setTotalOrders(String(customer.total_orders));
+    setFormError("");
+    setActionMessage("");
+    setDialogMode("edit");
+    setIsDialogOpen(true);
+  };
+
   useEffect(() => {
     const initSession = async () => {
       const { data } = await supabase.auth.getSession();
@@ -111,7 +156,28 @@ export default function AdminPage() {
     if (session) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       loadCustomers();
+      loadSettings();
     }
+  }, [session]);
+
+  useEffect(() => {
+    if (!session) return;
+    const resetTimer = () => {
+      if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
+      inactivityTimerRef.current = setTimeout(async () => {
+        await supabase.auth.signOut();
+        setCustomers([]);
+      }, INACTIVITY_TIMEOUT);
+    };
+    const events = ["mousemove", "keydown", "click", "scroll", "touchstart"];
+    events.forEach((e) =>
+      window.addEventListener(e, resetTimer, { passive: true })
+    );
+    resetTimer();
+    return () => {
+      events.forEach((e) => window.removeEventListener(e, resetTimer));
+      if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
+    };
   }, [session]);
 
   const handleSignIn = async (event: FormEvent<HTMLFormElement>) => {
@@ -143,6 +209,7 @@ export default function AdminPage() {
     setTotalOrders("");
     setFormError("");
     setActionMessage("");
+    setDialogMode("add");
     setIsDialogOpen(true);
   };
 
@@ -378,13 +445,25 @@ export default function AdminPage() {
             </h1>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
+          <div className="grid grid-cols-3 gap-3 sm:flex sm:flex-wrap">
             <Link
               href="/"
               className="inline-flex items-center justify-center rounded-xl border border-slate-200 px-4 py-3 text-center text-sm font-bold transition-colors hover:border-primary hover:text-primary dark:border-slate-800"
             >
               Dashboard publik
             </Link>
+            <button
+              type="button"
+              onClick={toggleLoyalty}
+              className={`inline-flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm font-bold transition-colors ${
+                showLoyalty
+                  ? "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-400"
+                  : "border-slate-200 text-slate-500 hover:border-primary hover:text-primary dark:border-slate-700"
+              }`}
+            >
+              {showLoyalty ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+              {showLoyalty ? "Loyalty ON" : "Loyalty OFF"}
+            </button>
             <button
               type="button"
               onClick={handleSignOut}
@@ -454,10 +533,7 @@ export default function AdminPage() {
                   <AdminCustomerCard
                     key={customer.id}
                     customer={customer}
-                    onEdit={() => {
-                      chooseCustomer(customer);
-                      setIsDialogOpen(true);
-                    }}
+                    onEdit={() => openEditDialog(customer)}
                     onMarkUsed={() => markRewardUsed(customer)}
                     onUndoUsed={() => undoRewardUsed(customer)}
                     onDelete={() => deleteCustomer(customer)}
@@ -506,10 +582,7 @@ export default function AdminPage() {
                             <div className="flex flex-wrap gap-2">
                               <button
                                 type="button"
-                                onClick={() => {
-                                  chooseCustomer(customer);
-                                  setIsDialogOpen(true);
-                                }}
+                                onClick={() => openEditDialog(customer)}
                                 className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-bold transition-colors hover:border-primary hover:text-primary dark:border-slate-700"
                               >
                                 Edit
@@ -559,10 +632,10 @@ export default function AdminPage() {
             <div className="mb-5 flex items-start justify-between gap-4">
               <div>
                 <span className="text-xs font-bold uppercase tracking-widest text-primary sm:text-sm">
-                  Input manual
+                  {dialogMode === "add" ? "Input manual" : "Edit data"}
                 </span>
                 <h2 className="mt-2 font-[var(--font-display)] text-xl font-extrabold sm:text-2xl">
-                  Cari atau tambah pembeli
+                  {dialogMode === "add" ? "Cari atau tambah pembeli" : "Edit data pembeli"}
                 </h2>
               </div>
               <button
@@ -575,52 +648,56 @@ export default function AdminPage() {
               </button>
             </div>
 
-            <div className="mb-5">
-              <label className="mb-2 block text-sm font-bold" htmlFor="search">
-                Cari nama pembeli
-              </label>
-              <div className="relative">
-                <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-                <input
-                  id="search"
-                  type="search"
-                  value={searchTerm}
-                  onChange={(event) => setSearchTerm(event.target.value)}
-                  placeholder="Ketik nama pembeli"
-                  className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-11 pr-4 outline-none transition-colors focus:border-primary dark:border-slate-700 dark:bg-slate-950"
-                />
-              </div>
-            </div>
+            {dialogMode === "add" && (
+              <>
+                <div className="mb-5">
+                  <label className="mb-2 block text-sm font-bold" htmlFor="search">
+                    Cari nama pembeli
+                  </label>
+                  <div className="relative">
+                    <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                    <input
+                      id="search"
+                      type="search"
+                      value={searchTerm}
+                      onChange={(event) => setSearchTerm(event.target.value)}
+                      placeholder="Ketik nama pembeli"
+                      className="w-full rounded-xl border border-slate-200 bg-white py-3 pl-11 pr-4 outline-none transition-colors focus:border-primary dark:border-slate-700 dark:bg-slate-950"
+                    />
+                  </div>
+                </div>
 
-            <div className="mb-5 grid gap-2">
-              {filteredCustomers.map((customer) => (
-                <button
-                  key={customer.id}
-                  type="button"
-                  onClick={() => chooseCustomer(customer)}
-                  className={`flex flex-col gap-1 rounded-xl border px-4 py-3 text-left transition-colors sm:flex-row sm:items-center sm:justify-between ${
-                    selectedCustomer?.id === customer.id
-                      ? "border-primary bg-primary/10"
-                      : "border-slate-200 hover:border-primary dark:border-slate-700"
-                  }`}
-                >
-                  <span className="font-bold">{customer.name}</span>
-                  <span className="text-sm text-slate-500">
-                    {customer.total_orders} pemesanan
-                  </span>
-                </button>
-              ))}
+                <div className="mb-5 grid gap-2">
+                  {filteredCustomers.map((customer) => (
+                    <button
+                      key={customer.id}
+                      type="button"
+                      onClick={() => chooseCustomer(customer)}
+                      className={`flex flex-col gap-1 rounded-xl border px-4 py-3 text-left transition-colors sm:flex-row sm:items-center sm:justify-between ${
+                        selectedCustomer?.id === customer.id
+                          ? "border-primary bg-primary/10"
+                          : "border-slate-200 hover:border-primary dark:border-slate-700"
+                      }`}
+                    >
+                      <span className="font-bold">{customer.name}</span>
+                      <span className="text-sm text-slate-500">
+                        {customer.total_orders} pemesanan
+                      </span>
+                    </button>
+                  ))}
 
-              {searchTerm.trim() && !selectedCustomer && (
-                <button
-                  type="button"
-                  onClick={startNewCustomer}
-                  className="rounded-xl border border-dashed border-primary px-4 py-3 text-left font-bold text-primary"
-                >
-                  Tambah nama baru: {searchTerm.trim()}
-                </button>
-              )}
-            </div>
+                  {searchTerm.trim() && !selectedCustomer && (
+                    <button
+                      type="button"
+                      onClick={startNewCustomer}
+                      className="rounded-xl border border-dashed border-primary px-4 py-3 text-left font-bold text-primary"
+                    >
+                      Tambah nama baru: {searchTerm.trim()}
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
 
             <form onSubmit={saveCustomer}>
               <div className="grid gap-4 sm:grid-cols-2">

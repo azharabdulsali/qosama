@@ -1,15 +1,19 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Gift, RefreshCw } from "lucide-react";
+import { ChevronLeft, ChevronRight, Gift, RefreshCw } from "lucide-react";
 import { getRewardStats } from "@/lib/rewards";
 import { supabase } from "@/lib/supabase/client";
 import type { Customer } from "@/lib/supabase/types";
+
+const PAGE_SIZE = 5;
 
 export default function RewardsDashboard() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [showSection, setShowSection] = useState<boolean | null>(null);
 
   const totals = useMemo(() => {
     return customers.reduce(
@@ -29,6 +33,13 @@ export default function RewardsDashboard() {
     );
   }, [customers]);
 
+  const totalPages = Math.max(1, Math.ceil(customers.length / PAGE_SIZE));
+
+  const pagedCustomers = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return customers.slice(start, start + PAGE_SIZE);
+  }, [customers, currentPage]);
+
   const loadCustomers = async () => {
     setIsLoading(true);
     setError("");
@@ -47,12 +58,26 @@ export default function RewardsDashboard() {
     }
 
     setIsLoading(false);
+    setCurrentPage(1);
+  };
+
+  const loadVisibility = async () => {
+    const { data } = await supabase
+      .from("site_settings")
+      .select("value")
+      .eq("key", "show_loyalty")
+      .single();
+    setShowSection(data ? data.value === "true" : true);
   };
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadVisibility();
     loadCustomers();
   }, []);
+
+  if (showSection === null) return null;
+  if (!showSection) return null;
 
   return (
     <section
@@ -102,12 +127,14 @@ export default function RewardsDashboard() {
             </div>
           ) : (
             <div>
+              {/* Mobile cards */}
               <div className="grid gap-3 bg-white p-3 dark:bg-slate-950 md:hidden">
-                {customers.map((customer) => (
+                {pagedCustomers.map((customer) => (
                   <CustomerRewardCard key={customer.id} customer={customer} />
                 ))}
               </div>
 
+              {/* Desktop table */}
               <div className="hidden overflow-x-auto md:block">
                 <table className="w-full min-w-[720px] text-left">
                   <thead className="bg-slate-100 text-xs uppercase tracking-wider text-slate-500 dark:bg-slate-800 dark:text-slate-400">
@@ -120,7 +147,7 @@ export default function RewardsDashboard() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-200 bg-white dark:divide-slate-800 dark:bg-slate-950">
-                    {customers.map((customer) => {
+                    {pagedCustomers.map((customer) => {
                       const reward = getRewardStats(
                         customer.total_orders,
                         customer.rewards_used,
@@ -152,6 +179,33 @@ export default function RewardsDashboard() {
                   </tbody>
                 </table>
               </div>
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between border-t border-slate-200 px-4 py-3 dark:border-slate-800 sm:px-5">
+                  <button
+                    type="button"
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage <= 1}
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 px-3 py-2 text-sm font-bold transition-colors hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    <span className="hidden xs:inline">Sebelumnya</span>
+                  </button>
+                  <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                    {currentPage} / {totalPages}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={currentPage >= totalPages}
+                    className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 px-3 py-2 text-sm font-bold transition-colors hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-700"
+                  >
+                    <span className="hidden xs:inline">Berikutnya</span>
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </div>

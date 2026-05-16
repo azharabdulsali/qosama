@@ -4,11 +4,13 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowRight, LogIn, Menu, Moon, Sun, X } from "lucide-react";
+import { supabase } from "@/lib/supabase/client";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [showLoyalty, setShowLoyalty] = useState(true);
 
   useEffect(() => {
     const stored = localStorage.getItem("theme");
@@ -22,6 +24,16 @@ export default function Navbar() {
     }
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll, { passive: true });
+
+    supabase
+      .from("site_settings")
+      .select("value")
+      .eq("key", "show_loyalty")
+      .single()
+      .then(({ data }) => {
+        if (data) setShowLoyalty(data.value === "true");
+      });
+
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
@@ -39,14 +51,16 @@ export default function Navbar() {
     });
   };
 
-  const menuItems = [
-    // { title: "Beranda", href: "#beranda" },
+  const allMenuItems = [
     { title: "Tentang", href: "#tentang" },
     { title: "Layanan", href: "#layanan" },
-    // { title: "Proses", href: "#proses" },
     { title: "Leaderboard", href: "#dashboard" },
     { title: "Kontak", href: "#kontak" },
   ];
+
+  const menuItems = showLoyalty
+    ? allMenuItems
+    : allMenuItems.filter((item) => item.href !== "#dashboard");
 
   const WA_LINK =
     "https://wa.me/6285162810074?text=Halo%20Admin%2C%20saya%20tertarik%20menggunakan%20layanan%20Qosama.%20Mohon%20informasi%20lebih%20lanjut.";
@@ -137,7 +151,16 @@ export default function Navbar() {
                 <a
                   key={item.title}
                   href={item.href}
-                  onClick={() => setIsOpen(false)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const target = document.querySelector(item.href);
+                    if (target) {
+                      setIsOpen(false);
+                      setTimeout(() => {
+                        target.scrollIntoView({ behavior: "smooth" });
+                      }, 300);
+                    }
+                  }}
                   className="rounded-xl px-2 py-2 text-base font-medium transition-colors hover:bg-slate-50 hover:text-primary dark:hover:bg-slate-900"
                 >
                   {item.title}
