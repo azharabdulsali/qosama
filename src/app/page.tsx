@@ -3,6 +3,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import RewardsDashboard from "@/components/RewardsDashboard";
+import SmartQueue from "@/components/SmartQueue";
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 
@@ -118,6 +119,9 @@ export default function Home() {
 
       {/* ====== REWARDS LEADERBOARD ====== */}
       <RewardsDashboard />
+
+      {/* ====== SMART QUEUE MONITOR ====== */}
+      <SmartQueue />
 
       {/* ====== WHY CHOOSE US SECTION ====== */}
       <section

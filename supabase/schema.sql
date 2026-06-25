@@ -86,3 +86,51 @@ with check (true);
 insert into public.site_settings (key, value)
   values ('show_loyalty', 'true')
   on conflict (key) do nothing;
+
+insert into public.site_settings (key, value)
+  values ('sdm_count', '3')
+  on conflict (key) do nothing;
+
+-- ── Laundry Queue (Smart Queue Scheduling System) ──
+
+create table if not exists public.laundry_queue (
+  id uuid primary key default gen_random_uuid(),
+  no_antrean integer not null,
+  nama_pelanggan text not null check (char_length(btrim(nama_pelanggan)) > 0),
+  jenis_layanan text not null check (jenis_layanan in ('Reguler', 'Express', 'Extra Express')),
+  berat decimal not null check (berat > 0),
+  tanggal_masuk timestamptz not null default now(),
+  status text not null default 'pending' check (status in ('pending', 'proses', 'selesai'))
+);
+
+alter table public.laundry_queue enable row level security;
+
+drop policy if exists "Queue visible publicly" on public.laundry_queue;
+create policy "Queue visible publicly"
+on public.laundry_queue
+for select
+to anon, authenticated
+using (true);
+
+drop policy if exists "Authenticated admins can insert queue" on public.laundry_queue;
+create policy "Authenticated admins can insert queue"
+on public.laundry_queue
+for insert
+to authenticated
+with check (true);
+
+drop policy if exists "Authenticated admins can update queue" on public.laundry_queue;
+create policy "Authenticated admins can update queue"
+on public.laundry_queue
+for update
+to authenticated
+using (true)
+with check (true);
+
+drop policy if exists "Authenticated admins can delete queue" on public.laundry_queue;
+create policy "Authenticated admins can delete queue"
+on public.laundry_queue
+for delete
+to authenticated
+using (true);
+
