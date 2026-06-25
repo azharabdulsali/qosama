@@ -27,6 +27,7 @@ export type LaundryQueueItem = {
   status: 'pending' | 'proses' | 'selesai';
   waktu_proses: string | null;
   waktu_selesai: string | null;
+  estimasi_selesai: string | null;
   sudah_bayar: boolean;
   // Joined from laundry_customers (present when fetched with JOIN)
   laundry_customers?: LaundryCustomer | null;
@@ -92,6 +93,7 @@ export type Database = {
           status?: 'pending' | 'proses' | 'selesai';
           waktu_proses?: string | null;
           waktu_selesai?: string | null;
+          estimasi_selesai?: string | null;
           sudah_bayar?: boolean;
         };
         Update: {
@@ -105,6 +107,7 @@ export type Database = {
           status?: 'pending' | 'proses' | 'selesai';
           waktu_proses?: string | null;
           waktu_selesai?: string | null;
+          estimasi_selesai?: string | null;
           sudah_bayar?: boolean;
         };
         Relationships: [

@@ -45,6 +45,7 @@ import {
   generateQueueNumber,
   togglePaymentStatus,
   getHistoryQueue,
+  getTotalActiveWeight,
   SortedQueueItem,
 } from "./queueActions";
 import {
@@ -55,6 +56,42 @@ import {
 } from "./customerActions";
 
 const INACTIVITY_TIMEOUT = 10 * 60 * 1000;
+
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+
+const MySwal = withReactContent(Swal);
+
+export const Toast = MySwal.mixin({
+  toast: true,
+  position: "top-end",
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.onmouseenter = Swal.stopTimer;
+    toast.onmouseleave = Swal.resumeTimer;
+  }
+});
+
+export const showToast = (icon: "success" | "error" | "warning", title: string) => {
+  Toast.fire({ icon, title });
+};
+
+export const confirmAction = async (title: string, text?: string, confirmText: string = "Ya, Hapus", isDanger: boolean = true) => {
+  const result = await MySwal.fire({
+    title,
+    text,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: isDanger ? "#ef4444" : "#2563eb",
+    cancelButtonColor: "#94a3b8",
+    confirmButtonText: confirmText,
+    cancelButtonText: "Batal",
+    reverseButtons: true,
+  });
+  return result.isConfirmed;
+};
 
 // ── Utility Helpers ──────────────────────────────────────────────────────────
 
@@ -230,10 +267,8 @@ function CustomerPickerDialog({
 
 function ManageCustomersPanel({
   accessToken,
-  onMessage,
 }: {
   accessToken?: string;
-  onMessage: (msg: string) => void;
 }) {
   const [customers, setCustomers] = useState<LaundryCustomer[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -287,7 +322,7 @@ function ManageCustomersPanel({
       nama: editNama, nomor_kamar: editKamar || undefined, nomor_wa: editWa || undefined,
     }, accessToken);
     if (res.success) {
-      onMessage("Data pelanggan berhasil diperbarui.");
+      showToast("success", "Data pelanggan berhasil diperbarui.");
       setEditingId(null);
       await load();
     } else {
@@ -297,13 +332,14 @@ function ManageCustomersPanel({
   };
 
   const handleDelete = async (c: LaundryCustomer) => {
-    if (!window.confirm(`Hapus pelanggan ${c.nama}? Antrean yang terkait tidak akan terhapus.`)) return;
+    const isConfirmed = await confirmAction(`Hapus pelanggan ${c.nama}?`, "Antrean yang terkait tidak akan terhapus.", "Ya, Hapus", true);
+    if (!isConfirmed) return;
     const res = await deleteLaundryCustomer(c.id, accessToken);
     if (res.success) {
-      onMessage(`Pelanggan ${c.nama} berhasil dihapus.`);
+      showToast("success", `Pelanggan ${c.nama} berhasil dihapus.`);
       await load();
     } else {
-      onMessage(`Gagal menghapus: ${res.error}`);
+      showToast("error", `Gagal menghapus: ${res.error}`);
     }
   };
 
@@ -416,7 +452,6 @@ export default function AdminPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [isCustomersLoading, setIsCustomersLoading] = useState(false);
   const [customersError, setCustomersError] = useState("");
-  const [actionMessage, setActionMessage] = useState("");
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -493,7 +528,7 @@ export default function AdminPage() {
     try {
       const data = await getSortedQueue(sdmCount, session?.access_token);
       setQueueItems(data);
-    } catch { setActionMessage("Gagal memuat antrean laundry."); }
+    } catch { showToast("error", "Gagal memuat antrean laundry."); }
     finally { setIsQueueLoading(false); }
   }, [sdmCount, session?.access_token]);
 
@@ -515,12 +550,11 @@ export default function AdminPage() {
 
   const toggleLoyalty = async () => {
     const next = !showLoyalty;
-    setActionMessage("");
     const { error } = await supabase.from("site_settings").update({ value: String(next) }).eq("key", "show_loyalty");
     if (!error) {
       setShowLoyalty(next);
-      setActionMessage(next ? "Customer Loyalty ditampilkan di dashboard publik." : "Customer Loyalty disembunyikan dari dashboard publik.");
-    } else setActionMessage("Gagal mengubah pengaturan.");
+      showToast("success", next ? "Customer Loyalty ditampilkan di dashboard publik." : "Customer Loyalty disembunyikan dari dashboard publik.");
+    } else showToast("error", "Gagal mengubah pengaturan.");
   };
 
   // ── Effects ───────────────────────────────────────────────────────────────
@@ -586,10 +620,10 @@ export default function AdminPage() {
   // ── Loyalty Customer Handlers ─────────────────────────────────────────────
 
   const openCustomerDialog = () => {
-    setSearchTerm(""); setSelectedCustomer(null); setCustomerName(""); setTotalOrders(""); setFormError(""); setActionMessage(""); setDialogMode("add"); setIsDialogOpen(true);
+    setSearchTerm(""); setSelectedCustomer(null); setCustomerName(""); setTotalOrders(""); setFormError(""); setDialogMode("add"); setIsDialogOpen(true);
   };
   const openEditDialog = (customer: Customer) => {
-    setSelectedCustomer(customer); setCustomerName(customer.name); setTotalOrders(String(customer.total_orders)); setFormError(""); setActionMessage(""); setDialogMode("edit"); setIsDialogOpen(true);
+    setSelectedCustomer(customer); setCustomerName(customer.name); setTotalOrders(String(customer.total_orders)); setFormError(""); setDialogMode("edit"); setIsDialogOpen(true);
   };
   const closeCustomerDialog = () => { if (!isSaving) setIsDialogOpen(false); };
   const chooseCustomer = (c: Customer) => { setSelectedCustomer(c); setCustomerName(c.name); setTotalOrders(String(c.total_orders)); setFormError(""); };
@@ -597,7 +631,7 @@ export default function AdminPage() {
 
   const saveCustomer = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setFormError(""); setActionMessage("");
+    setFormError("");
     const cleanName = customerName.trim();
     const parsedOrders = Number(totalOrders);
     if (!cleanName) { setFormError("Nama pembeli wajib diisi."); return; }
@@ -612,33 +646,33 @@ export default function AdminPage() {
       setIsSaving(false); return;
     }
     await loadCustomers();
-    setActionMessage("Data pembeli berhasil disimpan.");
+    showToast("success", "Data pembeli berhasil disimpan.");
     setIsSaving(false); setIsDialogOpen(false);
   };
 
   const markRewardUsed = async (c: Customer) => {
     const r = getRewardStats(c.total_orders, c.rewards_used);
     if (r.availableRewards < 1) return;
-    setActionMessage("");
     const { error } = await supabase.from("customers").update({ rewards_used: c.rewards_used + 1 }).eq("id", c.id);
-    if (error) { setActionMessage("Reward belum bisa ditandai."); return; }
-    setActionMessage(`Reward ${c.name} ditandai sudah dipakai.`);
+    if (error) { showToast("error", "Reward belum bisa ditandai."); return; }
+    showToast("success", `Reward ${c.name} ditandai sudah dipakai.`);
     await loadCustomers();
   };
 
   const undoRewardUsed = async (c: Customer) => {
     if (c.rewards_used < 1) return;
     const { error } = await supabase.from("customers").update({ rewards_used: c.rewards_used - 1 }).eq("id", c.id);
-    if (error) { setActionMessage("Status reward belum bisa dikembalikan."); return; }
-    setActionMessage(`Pemakaian reward ${c.name} dikurangi.`);
+    if (error) { showToast("error", "Status reward belum bisa dikembalikan."); return; }
+    showToast("success", `Pemakaian reward ${c.name} dikurangi.`);
     await loadCustomers();
   };
 
   const deleteCustomer = async (c: Customer) => {
-    if (!window.confirm(`Hapus data ${c.name}?`)) return;
+    const isConfirmed = await confirmAction(`Hapus data ${c.name}?`, undefined, "Ya, Hapus", true);
+    if (!isConfirmed) return;
     const { error } = await supabase.from("customers").delete().eq("id", c.id);
-    if (error) { setActionMessage("Customer belum bisa dihapus."); return; }
-    setActionMessage(`Customer ${c.name} berhasil dihapus.`);
+    if (error) { showToast("error", "Customer belum bisa dihapus."); return; }
+    showToast("success", `Customer ${c.name} berhasil dihapus.`);
     await loadCustomers();
   };
 
@@ -674,17 +708,63 @@ export default function AdminPage() {
 
   const handleSaveQueueItem = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setQueueFormError(""); setActionMessage("");
+    setQueueFormError("");
     if (!selectedLaundryCustomer) { setQueueFormError("Pelanggan belum dipilih. Klik tombol Pilih Pelanggan."); return; }
     const parsedWeight = parseFloat(queueBerat);
     if (isNaN(parsedWeight) || parsedWeight <= 0) { setQueueFormError("Berat harus berupa angka positif."); return; }
+
+    // --- Extreme Capacity Handling ---
+    let finalLayanan = queueLayanan;
+    const activeBacklogWeight = await getTotalActiveWeight(session?.access_token);
+    const totalLoad = activeBacklogWeight + parsedWeight;
+    const dailyCapacity = sdmCount * 10;
+    const daysRequired = Math.ceil(totalLoad / dailyCapacity);
+    
+    let maxDays = 3;
+    if (queueLayanan === "Extra Express") maxDays = 1;
+    else if (queueLayanan === "Express") maxDays = 2;
+
+    const expectedDate = new Date();
+    expectedDate.setDate(expectedDate.getDate() + Math.max(1, daysRequired)); // At least 1 day
+
+    if (daysRequired > maxDays) {
+      let suggestedLayanan = "Reguler";
+      if (daysRequired <= 1) suggestedLayanan = "Extra Express";
+      else if (daysRequired === 2) suggestedLayanan = "Express";
+      
+      const options: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const dateStr = expectedDate.toLocaleDateString('id-ID', options);
+
+      const title = "Peringatan Kapasitas!";
+      const text = `Ada ${activeBacklogWeight} kg antrean aktif. Dengan pesanan baru ${parsedWeight} kg (Total: ${totalLoad} kg), butuh waktu ${daysRequired} hari dengan ${sdmCount} SDM aktif. Ekspektasi selesai pada ${dateStr}.\n\nApakah Anda setuju menyesuaikan jenis layanan menjadi ${suggestedLayanan}?`;
+      
+      const result = await MySwal.fire({
+        title,
+        text,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#2563eb",
+        cancelButtonColor: "#ef4444",
+        confirmButtonText: "Ya, Setuju",
+        cancelButtonText: "Tidak, Batal",
+        reverseButtons: true,
+      });
+
+      if (!result.isConfirmed) {
+        return; // Transaksi dibatalkan
+      }
+      finalLayanan = suggestedLayanan as "Reguler" | "Express" | "Extra Express";
+    }
+    // ---------------------------------
+
     setIsQueueSaving(true);
 
     const payload = {
       customer_id: selectedLaundryCustomer.id,
       nama_pelanggan: selectedLaundryCustomer.nama,
-      jenis_layanan: queueLayanan,
+      jenis_layanan: finalLayanan,
       berat: parsedWeight,
+      estimasi_selesai: expectedDate.toISOString(),
     };
 
     const res = selectedQueueItem
@@ -693,7 +773,7 @@ export default function AdminPage() {
 
     if (res.success) {
       const noStr = "no_antrean" in res && res.no_antrean ? ` (${res.no_antrean})` : "";
-      setActionMessage(selectedQueueItem ? "Item antrean berhasil diperbarui." : `Antrean baru berhasil ditambahkan${noStr}.`);
+      showToast("success", selectedQueueItem ? "Item antrean berhasil diperbarui." : `Antrean baru berhasil ditambahkan${noStr}.`);
       await loadQueue();
       setIsQueueDialogOpen(false);
     } else {
@@ -704,35 +784,41 @@ export default function AdminPage() {
 
   const handleUpdateQueueStatus = async (item: SortedQueueItem, status: "pending" | "proses" | "selesai") => {
     if (status === "selesai" && !item.sudah_bayar) {
-      setActionMessage(`⚠️ ${item.nama_pelanggan} belum bayar. Tandai lunas terlebih dahulu sebelum menyelesaikan.`);
+      showToast("warning", `⚠️ ${item.nama_pelanggan} belum bayar. Tandai lunas terlebih dahulu sebelum menyelesaikan.`);
       return;
     }
-    setActionMessage("");
+
+    const isConfirmed = await confirmAction(`Ubah status ke ${status}?`, undefined, "Ya, Ubah", false);
+    if (!isConfirmed) return;
+
     const res = await updateQueueItemStatus(item.id, status, session?.access_token);
-    if (res.success) { setActionMessage(`Status ${item.nama_pelanggan} → ${status}.`); await loadQueue(); }
-    else setActionMessage(`Gagal memperbarui status: ${res.error}`);
+    if (res.success) { showToast("success", `Status ${item.nama_pelanggan} → ${status}.`); await loadQueue(); }
+    else showToast("error", `Gagal memperbarui status: ${res.error}`);
   };
 
   const handleTogglePayment = async (item: SortedQueueItem) => {
     const next = !item.sudah_bayar;
-    if (!window.confirm(next ? `Tandai cucian ${item.nama_pelanggan} sudah lunas?` : `Batalkan status lunas untuk ${item.nama_pelanggan}?`)) return;
+    const isConfirmed = await confirmAction(next ? `Tandai cucian ${item.nama_pelanggan} sudah lunas?` : `Batalkan status lunas untuk ${item.nama_pelanggan}?`, undefined, next ? "Ya, Tandai Lunas" : "Ya, Batalkan Lunas", !next);
+    if (!isConfirmed) return;
     const res = await togglePaymentStatus(item.id, next, session?.access_token);
-    if (res.success) { setActionMessage(next ? `${item.nama_pelanggan} ditandai sudah bayar.` : `${item.nama_pelanggan} ditandai belum bayar.`); await loadQueue(); }
-    else setActionMessage(`Gagal mengubah status bayar: ${res.error}`);
+    if (res.success) { showToast("success", next ? `${item.nama_pelanggan} ditandai sudah bayar.` : `${item.nama_pelanggan} ditandai belum bayar.`); await loadQueue(); }
+    else showToast("error", `Gagal mengubah status bayar: ${res.error}`);
   };
 
   const handleDeleteQueueItem = async (id: string, nama: string) => {
-    if (!window.confirm(`Hapus antrean untuk ${nama}?`)) return;
+    const isConfirmed = await confirmAction(`Hapus antrean untuk ${nama}?`, undefined, "Ya, Hapus", true);
+    if (!isConfirmed) return;
     const res = await deleteQueueItem(id, session?.access_token);
-    if (res.success) { setActionMessage(`Antrean ${nama} berhasil dihapus.`); await loadQueue(); }
-    else setActionMessage(`Gagal menghapus: ${res.error}`);
+    if (res.success) { showToast("success", `Antrean ${nama} berhasil dihapus.`); await loadQueue(); }
+    else showToast("error", `Gagal menghapus: ${res.error}`);
   };
 
   const handleDeleteHistoryItem = async (id: string, nama: string) => {
-    if (!window.confirm(`Hapus riwayat laundry untuk ${nama}?`)) return;
+    const isConfirmed = await confirmAction(`Hapus riwayat laundry untuk ${nama}?`, undefined, "Ya, Hapus", true);
+    if (!isConfirmed) return;
     const res = await deleteQueueItem(id, session?.access_token);
-    if (res.success) { setHistoryItems((prev) => prev.filter((i) => i.id !== id)); setActionMessage(`Riwayat ${nama} dihapus.`); }
-    else setActionMessage(`Gagal menghapus: ${res.error}`);
+    if (res.success) { setHistoryItems((prev) => prev.filter((i) => i.id !== id)); showToast("success", `Riwayat ${nama} dihapus.`); }
+    else showToast("error", `Gagal menghapus: ${res.error}`);
   };
 
   // ── Loading / Auth Screens ─────────────────────────────────────────────────
@@ -777,25 +863,26 @@ export default function AdminPage() {
               {activeTab === "loyalty" ? "Kelola pembeli dan reward" : activeTab === "customers" ? "Master Pelanggan Laundry" : activeTab === "queue" ? "Sistem Antrean Cerdas Laundry" : "Riwayat Laundry Selesai"}
             </h1>
           </div>
-          <div className="grid grid-cols-3 gap-3 sm:flex sm:flex-wrap">
-            <Link href="/" className="inline-flex items-center justify-center rounded-xl border border-slate-200 px-4 py-3 text-sm font-bold transition-colors hover:border-primary hover:text-primary dark:border-slate-800">Dashboard publik</Link>
+          <div className="flex flex-wrap gap-2 sm:gap-3">
+            <Link href="/" className="inline-flex flex-1 sm:flex-none min-w-[120px] items-center justify-center rounded-xl border border-slate-200 px-3 py-2.5 sm:px-4 sm:py-3 text-xs sm:text-sm font-bold transition-colors hover:border-primary hover:text-primary dark:border-slate-800">Dashboard</Link>
             <button type="button" onClick={toggleLoyalty}
-              className={`inline-flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-sm font-bold transition-colors ${showLoyalty ? "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-400" : "border-slate-200 text-slate-500 hover:border-primary hover:text-primary dark:border-slate-700"}`}>
+              className={`inline-flex flex-1 sm:flex-none min-w-[120px] items-center justify-center gap-1.5 sm:gap-2 rounded-xl border px-3 py-2.5 sm:px-4 sm:py-3 text-xs sm:text-sm font-bold transition-colors ${showLoyalty ? "border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-400" : "border-slate-200 text-slate-500 hover:border-primary hover:text-primary dark:border-slate-700"}`}>
               {showLoyalty ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}{showLoyalty ? "Loyalty ON" : "Loyalty OFF"}
             </button>
             <button type="button" onClick={handleSignOut}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-slate-700 dark:bg-white dark:text-slate-950">
+              className="inline-flex flex-1 sm:flex-none min-w-[120px] items-center justify-center gap-1.5 sm:gap-2 rounded-xl bg-slate-900 px-3 py-2.5 sm:px-4 sm:py-3 text-xs sm:text-sm font-bold text-white transition-colors hover:bg-slate-700 dark:bg-white dark:text-slate-950">
               <LogOut className="h-4 w-4" />Keluar
             </button>
           </div>
         </header>
 
         {/* Tabs */}
-        <div className="mb-8 border-b border-slate-200 dark:border-slate-800">
-          <div className="flex gap-6 overflow-x-auto whitespace-nowrap">
+        {/* Tabs */}
+        <div className="mb-8">
+          <div className="flex overflow-x-auto gap-2 rounded-2xl bg-slate-100 p-1.5 dark:bg-slate-900 sm:inline-flex hide-scrollbar">
             {(["loyalty", "customers", "queue", "history"] as const).map((tab) => (
               <button key={tab} onClick={() => setActiveTab(tab)}
-                className={`pb-4 text-base font-bold transition-all border-b-2 outline-none ${activeTab === tab ? "border-primary text-primary" : "border-transparent text-slate-500 hover:text-slate-900 dark:hover:text-white"}`}>
+                className={`whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-bold transition-all outline-none flex-1 sm:flex-none ${activeTab === tab ? "bg-white text-primary shadow-sm dark:bg-slate-800 dark:text-white" : "text-slate-500 hover:text-slate-900 hover:bg-slate-200/50 dark:hover:text-white dark:hover:bg-slate-800/50"}`}>
                 {tab === "loyalty" ? "Loyalty & Rewards" : tab === "customers" ? "Pelanggan" : tab === "queue" ? "Antrean Laundry" : "Riwayat"}
               </button>
             ))}
@@ -817,7 +904,7 @@ export default function AdminPage() {
                 <button type="button" onClick={openCustomerDialog} className="inline-flex items-center justify-center gap-2 rounded-xl bg-secondary px-4 py-3 text-sm font-bold text-slate-950 transition-colors hover:bg-yellow-300"><Plus className="h-4 w-4" />Input pembeli</button>
               </div>
             </div>
-            {actionMessage && <div className="mb-5 rounded-xl border border-primary/20 bg-primary/10 px-4 py-3 text-sm font-bold text-primary">{actionMessage}</div>}
+
             {customersError && <div className="mb-5 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600 dark:bg-red-950/40">{customersError}</div>}
             <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
               {isCustomersLoading ? <div className="px-5 py-10 text-center text-slate-500">Memuat data...</div>
@@ -898,11 +985,7 @@ export default function AdminPage() {
               </div>
             </div>
 
-            {actionMessage && (
-              <div className={`mb-5 rounded-xl border px-4 py-3 text-sm font-bold ${actionMessage.startsWith("⚠️") ? "border-amber-300 bg-amber-50 text-amber-700 dark:border-amber-700 dark:bg-amber-950/40 dark:text-amber-400" : "border-primary/20 bg-primary/10 text-primary"}`}>
-                {actionMessage}
-              </div>
-            )}
+
 
             <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
               {isQueueLoading ? <div className="px-5 py-10 text-center text-slate-500">Memproses klasifikasi prioritas...</div>
@@ -1004,7 +1087,7 @@ export default function AdminPage() {
 
         {/* ── TAB: CUSTOMERS ── */}
         {activeTab === "customers" && (
-          <ManageCustomersPanel accessToken={session?.access_token} onMessage={setActionMessage} />
+          <ManageCustomersPanel accessToken={session?.access_token} />
         )}
 
         {/* ── TAB: HISTORY ── */}
@@ -1014,7 +1097,6 @@ export default function AdminPage() {
               <div className="text-sm text-slate-500 dark:text-slate-400">Laundry selesai — {historyItems.length} item ditampilkan</div>
               <button type="button" onClick={() => loadHistory(0)} className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-3 text-sm font-bold transition-colors hover:border-primary hover:text-primary dark:border-slate-800"><RefreshCw className="h-4 w-4" />Muat ulang</button>
             </div>
-            {actionMessage && <div className="mb-5 rounded-xl border border-primary/20 bg-primary/10 px-4 py-3 text-sm font-bold text-primary">{actionMessage}</div>}
             <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
               {isHistoryLoading && historyItems.length === 0 ? <div className="px-5 py-10 text-center text-slate-500">Memuat riwayat laundry...</div>
                 : historyItems.length === 0 ? <div className="px-5 py-10 text-center text-slate-500">Belum ada laundry yang selesai.</div>
@@ -1244,9 +1326,9 @@ export default function AdminPage() {
 
 function AdminMetric({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
+    <div className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-900 sm:p-6">
       <div className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 sm:text-sm">{label}</div>
-      <div className="mt-2 font-[var(--font-display)] text-2xl font-extrabold text-primary sm:text-3xl">{value}</div>
+      <div className="mt-2 font-[var(--font-display)] text-3xl font-extrabold text-primary sm:text-4xl">{value}</div>
     </div>
   );
 }
@@ -1256,24 +1338,28 @@ function AdminCustomerCard({ customer, onEdit, onMarkUsed, onUndoUsed, onDelete 
 }) {
   const reward = getRewardStats(customer.total_orders, customer.rewards_used);
   return (
-    <article className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <h3 className="truncate font-bold">{customer.name}</h3>
-          <p className="mt-1 text-sm text-slate-500">{customer.total_orders} total pemesanan</p>
+    <article className="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <div className="p-4 sm:p-5">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h3 className="truncate text-lg font-bold text-slate-900 dark:text-slate-100">{customer.name}</h3>
+            <p className="mt-0.5 text-sm font-medium text-slate-500">{customer.total_orders} pemesanan selesai</p>
+          </div>
+          <span className="inline-flex flex-shrink-0 items-center gap-1.5 rounded-full bg-secondary px-3 py-1 text-sm font-bold text-slate-950 shadow-sm"><Gift className="h-4 w-4" />{reward.availableRewards}</span>
         </div>
-        <span className="inline-flex flex-shrink-0 items-center gap-2 rounded-full bg-secondary px-3 py-1 text-sm font-bold text-slate-950"><Gift className="h-4 w-4" />{reward.availableRewards}</span>
+        <div className="mt-5 rounded-2xl bg-slate-50 p-4 dark:bg-slate-950/50">
+          <dl className="grid grid-cols-3 gap-2 text-center text-sm">
+            <div><dt className="text-xs font-bold text-slate-500 uppercase tracking-wider">Total</dt><dd className="mt-1 font-[var(--font-display)] text-xl font-bold">{reward.totalRewards}</dd></div>
+            <div><dt className="text-xs font-bold text-slate-500 uppercase tracking-wider">Dipakai</dt><dd className="mt-1 font-[var(--font-display)] text-xl font-bold">{customer.rewards_used}</dd></div>
+            <div><dt className="text-xs font-bold text-primary uppercase tracking-wider">Tersedia</dt><dd className="mt-1 font-[var(--font-display)] text-xl font-bold text-primary">{reward.availableRewards}</dd></div>
+          </dl>
+        </div>
       </div>
-      <dl className="mt-4 grid grid-cols-3 gap-2 text-sm">
-        <div><dt className="text-slate-500">Reward</dt><dd className="mt-1 font-bold">{reward.totalRewards}</dd></div>
-        <div><dt className="text-slate-500">Dipakai</dt><dd className="mt-1 font-bold">{customer.rewards_used}</dd></div>
-        <div><dt className="text-slate-500">Tersedia</dt><dd className="mt-1 font-bold">{reward.availableRewards}</dd></div>
-      </dl>
-      <div className="mt-4 grid grid-cols-2 gap-2">
-        <button type="button" onClick={onEdit} className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-bold transition-colors hover:border-primary hover:text-primary dark:border-slate-700">Edit</button>
-        <button type="button" onClick={onMarkUsed} disabled={reward.availableRewards < 1} className="inline-flex items-center justify-center gap-1 rounded-xl bg-primary px-3 py-2 text-sm font-bold text-white transition-colors hover:bg-blue-800 disabled:opacity-50"><Check className="h-4 w-4" />Pakai</button>
-        <button type="button" onClick={onUndoUsed} disabled={customer.rewards_used < 1} className="inline-flex items-center justify-center gap-1 rounded-xl border border-slate-200 px-3 py-2 text-sm font-bold transition-colors hover:border-primary hover:text-primary disabled:opacity-50 dark:border-slate-700"><Minus className="h-4 w-4" />Undo</button>
-        <button type="button" onClick={onDelete} className="col-span-2 inline-flex items-center justify-center gap-1 rounded-xl border border-red-200 px-3 py-2 text-sm font-bold text-red-600 transition-colors hover:border-red-500 hover:bg-red-50 dark:border-red-900/60"><Trash2 className="h-4 w-4" />Hapus customer</button>
+      <div className="grid grid-cols-2 gap-[1px] border-t border-slate-100 bg-slate-100 p-[1px] dark:border-slate-800 dark:bg-slate-800">
+        <button type="button" onClick={onEdit} className="bg-white px-3 py-3.5 text-sm font-bold text-slate-700 transition-colors hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800/80">Edit</button>
+        <button type="button" onClick={onDelete} className="bg-white px-3 py-3.5 text-sm font-bold text-red-600 transition-colors hover:bg-red-50 dark:bg-slate-900 dark:hover:bg-red-950/40">Hapus</button>
+        <button type="button" onClick={onUndoUsed} disabled={customer.rewards_used < 1} className="inline-flex items-center justify-center gap-1.5 bg-white px-3 py-3.5 text-sm font-bold text-slate-700 transition-colors hover:bg-slate-50 disabled:opacity-50 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800/80"><Minus className="h-4 w-4" />Undo</button>
+        <button type="button" onClick={onMarkUsed} disabled={reward.availableRewards < 1} className="inline-flex items-center justify-center gap-1.5 bg-primary px-3 py-3.5 text-sm font-bold text-white transition-colors hover:bg-blue-800 disabled:opacity-50 dark:bg-primary dark:hover:bg-blue-800"><Check className="h-4 w-4" />Pakai</button>
       </div>
     </article>
   );
@@ -1301,44 +1387,64 @@ function AdminQueueCard({ item, onEdit, onUpdateStatus, onTogglePayment, onDelet
   const fdt = (iso: string | null | undefined) => iso ? new Date(iso).toLocaleString("id-ID", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" }) : null;
 
   return (
-    <article className="rounded-xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary font-bold text-white text-xs">{item.workOrder}</span>
-            <h3 className="truncate font-bold">{item.nama_pelanggan}</h3>
+    <article className="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      {/* Ticket Header */}
+      <div className="relative p-5 pb-4">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2.5">
+              <span className="inline-flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-primary font-bold text-white text-xs shadow-sm">{item.workOrder}</span>
+              <h3 className="truncate text-lg font-bold text-slate-900 dark:text-slate-100">{item.nama_pelanggan}</h3>
+            </div>
+            <p className="mt-1.5 font-mono text-sm font-bold tracking-tight text-slate-500">{item.no_antrean} <span className="text-slate-300 mx-1">•</span> {item.jenis_layanan}</p>
+            {(lc?.nomor_kamar || lc?.nomor_wa) && (
+              <p className="mt-2 flex flex-wrap gap-2 text-xs font-medium text-slate-500">
+                {lc?.nomor_kamar && <span className="flex items-center gap-1"><Home className="h-3.5 w-3.5" />{lc.nomor_kamar}</span>}
+                {lc?.nomor_wa && <span className="flex items-center gap-1"><Phone className="h-3.5 w-3.5" />{lc.nomor_wa}</span>}
+              </p>
+            )}
           </div>
-          <p className="mt-1 font-mono text-sm text-slate-500 font-bold">{item.no_antrean} • {item.jenis_layanan}</p>
-          {(lc?.nomor_kamar || lc?.nomor_wa) && (
-            <p className="mt-1 flex flex-wrap gap-2 text-xs text-slate-400">
-              {lc?.nomor_kamar && <span className="flex items-center gap-1"><Home className="h-3 w-3" />{lc.nomor_kamar}</span>}
-              {lc?.nomor_wa && <span className="flex items-center gap-1"><Phone className="h-3 w-3" />{lc.nomor_wa}</span>}
-            </p>
-          )}
+          <span className={`inline-flex flex-shrink-0 items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold shadow-sm ${prioColor}`}>{item.predictedPriority}</span>
         </div>
-        <span className={`inline-flex flex-shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-bold ${prioColor}`}>{item.predictedPriority}</span>
       </div>
-      <dl className="mt-3 grid grid-cols-2 gap-2 text-xs">
-        <div><dt className="text-slate-500">Berat</dt><dd className="mt-0.5 font-bold">{item.berat} Kg</dd></div>
-        <div><dt className="text-slate-500">Sisa Waktu</dt><dd className={`mt-0.5 font-bold ${sisaHariColor}`}>{sisaHari < 0 && <ShieldAlert className="h-3 w-3 inline mr-0.5" />}{sisaHariText}</dd></div>
-        <div><dt className="text-slate-500">Masuk</dt><dd className="mt-0.5">{fdt(item.tanggal_masuk) ?? "—"}</dd></div>
-        {item.waktu_proses && <div><dt className="text-slate-500">Mulai Proses</dt><dd className="mt-0.5">{fdt(item.waktu_proses)}</dd></div>}
-      </dl>
-      <div className="mt-3 flex gap-2">
-        <button type="button" onClick={onTogglePayment}
-          className={`flex-1 inline-flex items-center justify-center gap-1 rounded-xl px-3 py-2 text-xs font-bold transition-colors ${item.sudah_bayar ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200 dark:bg-emerald-950/50 dark:text-emerald-400" : "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 dark:bg-red-950/40 dark:text-red-400 dark:border-red-900/40"}`}>
-          <Wallet className="h-3 w-3" />{item.sudah_bayar ? "Lunas" : "Belum Bayar"}
-        </button>
-        <select value={item.status} onChange={(e) => onUpdateStatus(e.target.value as "pending" | "proses" | "selesai")}
-          className="flex-1 rounded-xl border border-slate-200 bg-white px-2 py-2 text-xs font-bold outline-none dark:border-slate-700 dark:bg-slate-950">
-          <option value="pending">Pending</option>
-          <option value="proses">Proses</option>
-          <option value="selesai">Selesai</option>
-        </select>
+      
+      {/* Dashed Divider */}
+      <div className="relative flex items-center px-2">
+        <div className="h-4 w-4 -ml-4 rounded-full bg-slate-50 border-r border-slate-200 dark:bg-slate-950 dark:border-slate-800"></div>
+        <div className="h-[2px] flex-1 border-b-2 border-dashed border-slate-200 dark:border-slate-700"></div>
+        <div className="h-4 w-4 -mr-4 rounded-full bg-slate-50 border-l border-slate-200 dark:bg-slate-950 dark:border-slate-800"></div>
       </div>
-      <div className="mt-2 grid grid-cols-2 gap-2">
-        <button type="button" onClick={onEdit} className="rounded-xl border border-slate-200 px-3 py-2 text-sm font-bold transition-colors hover:border-primary hover:text-primary dark:border-slate-700">Edit</button>
-        <button type="button" onClick={onDelete} className="inline-flex items-center justify-center gap-1 rounded-xl border border-red-200 px-3 py-2 text-sm font-bold text-red-600 transition-colors hover:border-red-500 hover:bg-red-50 dark:border-red-900/60"><Trash2 className="h-4 w-4" />Hapus</button>
+
+      {/* Ticket Body */}
+      <div className="p-5 pt-4">
+        <dl className="grid grid-cols-2 gap-y-4 gap-x-2 text-sm">
+          <div><dt className="text-xs font-bold text-slate-500 uppercase tracking-wider">Berat</dt><dd className="mt-1 font-[var(--font-display)] text-xl font-bold">{item.berat} Kg</dd></div>
+          <div><dt className="text-xs font-bold text-slate-500 uppercase tracking-wider">Sisa Waktu</dt><dd className={`mt-1 font-[var(--font-display)] text-xl font-bold ${sisaHariColor}`}>{sisaHari < 0 && <ShieldAlert className="h-4 w-4 inline mr-1" />}{sisaHariText}</dd></div>
+          <div><dt className="text-xs font-bold text-slate-500 uppercase tracking-wider">Masuk</dt><dd className="mt-1 font-medium">{fdt(item.tanggal_masuk) ?? "—"}</dd></div>
+          {item.waktu_proses && <div><dt className="text-xs font-bold text-slate-500 uppercase tracking-wider">Mulai Proses</dt><dd className="mt-1 font-medium">{fdt(item.waktu_proses)}</dd></div>}
+        </dl>
+      </div>
+
+      {/* Ticket Actions */}
+      <div className="grid gap-[1px] border-t border-slate-100 bg-slate-100 p-[1px] dark:border-slate-800 dark:bg-slate-800">
+        <div className="flex gap-[1px]">
+          <button type="button" onClick={onTogglePayment}
+            className={`flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-4 text-sm font-bold transition-colors ${item.sudah_bayar ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100 dark:bg-emerald-950/40 dark:text-emerald-400" : "bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-950/30 dark:text-red-400"}`}>
+            <Wallet className="h-4 w-4" />{item.sudah_bayar ? "Lunas" : "Belum Bayar"}
+          </button>
+          <div className="flex-1 bg-white dark:bg-slate-900 relative">
+            <select value={item.status} onChange={(e) => onUpdateStatus(e.target.value as "pending" | "proses" | "selesai")}
+              className="absolute inset-0 w-full h-full appearance-none bg-transparent px-4 py-4 text-center text-sm font-bold outline-none cursor-pointer">
+              <option value="pending">⏳ Pending</option>
+              <option value="proses">👕 Proses</option>
+              <option value="selesai">✅ Selesai</option>
+            </select>
+          </div>
+        </div>
+        <div className="flex gap-[1px]">
+          <button type="button" onClick={onEdit} className="flex-1 bg-white px-3 py-3.5 text-sm font-bold text-slate-700 transition-colors hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800/80">Edit</button>
+          <button type="button" onClick={onDelete} className="flex-1 inline-flex items-center justify-center gap-1.5 bg-white px-3 py-3.5 text-sm font-bold text-red-600 transition-colors hover:bg-red-50 dark:bg-slate-900 dark:hover:bg-red-950/40"><Trash2 className="h-4 w-4" />Hapus</button>
+        </div>
       </div>
     </article>
   );

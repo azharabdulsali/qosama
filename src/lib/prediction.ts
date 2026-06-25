@@ -5,10 +5,12 @@ import fs from 'fs';
 // Cached ONNX inference session
 let session: ort.InferenceSession | null = null;
 
+// Fix Next.js Server Action WASM path resolution
+ort.env.wasm.wasmPaths = path.join(process.cwd(), 'node_modules', 'onnxruntime-web', 'dist') + '/';
+ort.env.wasm.numThreads = 1; // Disable multi-threading for WASM serverless stability
+
 async function getSession(): Promise<ort.InferenceSession> {
   if (!session) {
-    // Disable multi-threading for WASM serverless stability
-    ort.env.wasm.numThreads = 1;
     const modelPath = path.join(process.cwd(), 'model.onnx');
     const modelBuffer = fs.readFileSync(modelPath);
     session = await ort.InferenceSession.create(modelBuffer);
@@ -45,7 +47,8 @@ export async function predictPriority(
   berat: number,
   antrean: number, // 0-indexed relative position in the active queue
   sdm: number,      // active workers count
-  tanggalMasuk: string | Date
+  tanggalMasuk: string | Date,
+  estimasiSelesai?: string | null
 ): Promise<{ priority: PriorityPrediction; sisaHariSorting: number }> {
   // 1. Mapping service options to Bobot_Urgensi and Batas_Waktu
   const mapping = {
@@ -58,18 +61,28 @@ export async function predictPriority(
   const bobotVal = currentMap.bobot;
   const batasWaktu = currentMap.sisa;
 
-  // 2. Dynamic Remaining Days Calculation based on calendar days elapsed
-  const start = new Date(tanggalMasuk);
+  // 2. Dynamic Remaining Days Calculation
   const now = new Date();
-  
-  // Extract date string to ignore hours and calculate calendar day difference
-  const startStr = start.toISOString().split('T')[0];
   const nowStr = now.toISOString().split('T')[0];
-  const startDate = new Date(startStr);
   const nowDate = new Date(nowStr);
-  const diffDays = Math.floor((nowDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+  
+  let sisaHariSorting: number;
 
-  const sisaHariSorting = batasWaktu - diffDays;
+  if (estimasiSelesai) {
+    // If we have an explicit estimation date, sisaHari is exactly the difference between now and that date
+    const estDate = new Date(estimasiSelesai);
+    const estStr = estDate.toISOString().split('T')[0];
+    const targetDate = new Date(estStr);
+    sisaHariSorting = Math.floor((targetDate.getTime() - nowDate.getTime()) / (1000 * 60 * 60 * 24));
+  } else {
+    // Fallback: use legacy SLA based calculation
+    const start = new Date(tanggalMasuk);
+    const startStr = start.toISOString().split('T')[0];
+    const startDate = new Date(startStr);
+    const diffDays = Math.floor((nowDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    sisaHariSorting = batasWaktu - diffDays;
+  }
+
   const sisaHariModel = Math.max(0, sisaHariSorting); // clip to 0 for model standard range
 
   // 3. Scale inputs using the fitted StandardScaler parameters
@@ -81,16 +94,32 @@ export async function predictPriority(
     scaleFeature(sdm, 4)
   ]);
 
-  // 4. Run ONNX prediction (fetching only output_label to avoid map sequence errors in Node bindings)
-  const ortSession = await getSession();
-  const inputTensor = new ort.Tensor('float32', inputScaled, [1, 5]);
-  const feeds = { [ortSession.inputNames[0]]: inputTensor };
-  const results = await ortSession.run(feeds, ['output_label']);
+  try {
+    // 4. Run ONNX prediction (fetching only output_label to avoid map sequence errors in Node bindings)
+    const ortSession = await getSession();
+    const inputTensor = new ort.Tensor('float32', inputScaled, [1, 5]);
+    const feeds = { [ortSession.inputNames[0]]: inputTensor };
+    const results = await ortSession.run(feeds, ['output_label']);
 
-  const priority = results.output_label.data[0] as PriorityPrediction;
+    const priority = results.output_label.data[0] as PriorityPrediction;
 
-  return {
-    priority,
-    sisaHariSorting
-  };
+    return {
+      priority,
+      sisaHariSorting
+    };
+  } catch (error) {
+    console.error("ONNX Prediction error:", error);
+    // Fallback to basic heuristics if ML fails
+    let fallbackPriority: PriorityPrediction = "Prioritas Sedang";
+    if (sisaHariSorting <= 0 || jenisLayanan === 'Extra Express') {
+      fallbackPriority = "Prioritas Tinggi";
+    } else if (sisaHariSorting > 2 && jenisLayanan === 'Reguler') {
+      fallbackPriority = "Prioritas Rendah";
+    }
+    
+    return {
+      priority: fallbackPriority,
+      sisaHariSorting
+    };
+  }
 }

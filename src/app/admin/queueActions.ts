@@ -32,10 +32,37 @@ function normalizeQueueItem(item: Record<string, unknown>): LaundryQueueItem {
     berat: Number(item.berat),
     waktu_proses: (item.waktu_proses as string | null) ?? null,
     waktu_selesai: (item.waktu_selesai as string | null) ?? null,
+    estimasi_selesai: (item.estimasi_selesai as string | null) ?? null,
     sudah_bayar: (item.sudah_bayar as boolean) ?? false,
     customer_id: (item.customer_id as string | null) ?? null,
     laundry_customers: (item.laundry_customers as LaundryCustomer | null) ?? null,
   };
+}
+
+// ── Backlog / Capacity Logic ───────────────────────────────────────────────
+
+/**
+ * Gets the sum of weight (berat) for all items that are currently pending or proses.
+ */
+export async function getTotalActiveWeight(accessToken?: string): Promise<number> {
+  try {
+    const client = getSupabaseServerClient(accessToken);
+    const { data, error } = await client
+      .from("laundry_queue")
+      .select("berat")
+      .in("status", ["pending", "proses"]);
+
+    if (error) {
+      console.error("Error fetching total weight:", error);
+      return 0;
+    }
+    
+    if (!data) return 0;
+    return data.reduce((acc, item) => acc + (item.berat || 0), 0);
+  } catch (err) {
+    console.error("Failed to get active weight:", err);
+    return 0;
+  }
 }
 
 // ── Queue Number Generation ────────────────────────────────────────────────
@@ -98,7 +125,8 @@ export async function getSortedQueue(
           normalized.berat,
           index,
           sdmCount,
-          normalized.tanggal_masuk
+          normalized.tanggal_masuk,
+          normalized.estimasi_selesai // pass this to use real date logic
         );
         return { ...normalized, predictedPriority: priority, sisaHariSorting };
       })
@@ -138,6 +166,7 @@ export async function addQueueItem(
     nama_pelanggan: string;
     jenis_layanan: "Reguler" | "Express" | "Extra Express";
     berat: number;
+    estimasi_selesai?: string | null;
   },
   accessToken?: string
 ): Promise<{ success: boolean; error?: string; no_antrean?: string }> {
@@ -153,6 +182,7 @@ export async function addQueueItem(
       berat: data.berat,
       status: "pending",
       sudah_bayar: false,
+      estimasi_selesai: data.estimasi_selesai ?? null,
     });
 
     if (error) {
@@ -175,6 +205,7 @@ export async function updateQueueItem(
     nama_pelanggan: string;
     jenis_layanan: "Reguler" | "Express" | "Extra Express";
     berat: number;
+    estimasi_selesai?: string | null;
   },
   accessToken?: string
 ): Promise<{ success: boolean; error?: string }> {
@@ -187,6 +218,7 @@ export async function updateQueueItem(
         nama_pelanggan: data.nama_pelanggan,
         jenis_layanan: data.jenis_layanan,
         berat: data.berat,
+        ...(data.estimasi_selesai !== undefined && { estimasi_selesai: data.estimasi_selesai }),
       })
       .eq("id", id);
 
