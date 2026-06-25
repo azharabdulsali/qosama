@@ -1,13 +1,17 @@
-import * as ort from 'onnxruntime-node';
+import * as ort from 'onnxruntime-web';
 import path from 'path';
+import fs from 'fs';
 
 // Cached ONNX inference session
 let session: ort.InferenceSession | null = null;
 
 async function getSession(): Promise<ort.InferenceSession> {
   if (!session) {
+    // Disable multi-threading for WASM serverless stability
+    ort.env.wasm.numThreads = 1;
     const modelPath = path.join(process.cwd(), 'model.onnx');
-    session = await ort.InferenceSession.create(modelPath);
+    const modelBuffer = fs.readFileSync(modelPath);
+    session = await ort.InferenceSession.create(modelBuffer);
   }
   return session;
 }
